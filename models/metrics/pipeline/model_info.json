@@ -1,0 +1,15 @@
+{
+  "model_name": "Pipeline_Risk_Classifier",
+  "algorithm": "LightGBM",
+  "task": "Classification",
+  "classes": [
+    "Critical",
+    "Moderate",
+    "Normal"
+  ],
+  "accuracy": 0.923,
+  "features": 25,
+  "trained_date": "2025-11-15",
+  "model_file": "pipeline_corrosion_model.pkl",
+  "status": "Ready for deployment"
+}

@@ -1,0 +1,4 @@
+alert_priority,equipment_id,equipment_type,location,risk_level,current_health,days_to_maintenance,is_anomaly,recommended_action,last_updated
+P1 - Immediate,PIPE-002,Pipeline,,Critical,0.272,7,True,Emergency inspection - critical corrosion level,2044-12-25 00:00:00
+P2 - Urgent,PIPE-001,Pipeline,,High,0.442,30,True,Plan pipeline segment replacement or coating repair,2044-12-25 00:00:00
+P3 - High,TURBINE-029,Turbine,,High,0.452,4,False,Schedule preventive maintenance,2023-01-08 03:00:00

@@ -1,0 +1,13 @@
+{
+  "model_name": "Turbine_RUL_Predictor",
+  "algorithm": "LightGBM",
+  "task": "Regression",
+  "target": "RUL (cycles)",
+  "r2_score": 0.847,
+  "rmse": 30.2,
+  "mae": 21.5,
+  "features": 29,
+  "trained_date": "2025-11-15",
+  "model_file": "turbine_rul_model.txt",
+  "status": "Deployed"
+}

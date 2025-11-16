@@ -1,0 +1,31 @@
+{
+  "model_name": "Compressor_Multi_Model",
+  "algorithms": [
+    "LightGBM (Efficiency)",
+    "LightGBM (RUL)",
+    "LightGBM (Anomaly)"
+  ],
+  "tasks": [
+    "Regression",
+    "Regression",
+    "Classification"
+  ],
+  "targets": [
+    "Efficiency",
+    "RUL (days)",
+    "Anomaly"
+  ],
+  "performance": {
+    "efficiency_r2": 0.82,
+    "rul_rmse": 245.0,
+    "anomaly_f1": 0.91
+  },
+  "features": 38,
+  "trained_date": "2025-11-15",
+  "model_files": [
+    "efficiency_model.pkl",
+    "rul_model.pkl",
+    "anomaly_model.pkl"
+  ],
+  "status": "Ready (notebook complete)"
+}

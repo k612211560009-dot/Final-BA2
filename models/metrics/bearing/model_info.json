@@ -1,0 +1,9 @@
+{
+  "model_name": "Bearing_Anomaly_Detector",
+  "algorithm": "Rule-based + Random Forest (planned)",
+  "task": "Classification",
+  "anomaly_rate": 0.462,
+  "features": 16,
+  "trained_date": "2025-11-15",
+  "status": "Rule-based (needs failure labels for supervised)"
+}

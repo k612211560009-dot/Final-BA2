@@ -1,0 +1,165 @@
+#1. CWRU Bearing Dataset 2
+
+About Dataset
+Context
+There are few datasets on mechanical engineering, in particular devoted to apply Machine Learning in industrial environment.
+The present data bundle is a community contribution to make available in Kaggle motor performance data provided by Case Western Bearing Data Center
+
+Content
+The test bench for motor performance assesment consists of:
+
+Motor with 2 HP power
+Torque transducer
+Dynamometer
+Control electronics
+The test bearings support the motor shaft. Defects were introduced at a single point by EDM machining. The diameters of defects in inches (millimeters):
+
+0.007 inches (0.178 millimeters)
+0.014 (0.356)
+0.021 (0.533)
+There is a time series for each defect located in 1 of 3 parts of the bearing: ball, inner race, outer race.
+
+Telemetry measurements are come from 3 acceleroments installed on 3 positions in the system:
+
+Drive end (DE)
+Fan end (FE)
+Base (BA)
+This dataset corresponds to the following conditions:
+
+1 HP load applied to the motor
+Shaft rotating speed of 1772 rpm
+48 kHz sampling frequency of the accelerometers
+Features
+The following 9 features are calculated in other to run the fault identification prediction: maximum, minimum, mean, standard deviation, RMS, skewness, kurtosis, crest factor and form factor.
+Each feature is computed for time segments of 2048 points (0.04 seconds at the 48kHz accelerometer sampling frequency).
+
+Acknowledgements
+This dataset is publicy available thanks to Case Western Reserve University](https://case.edu/)
+The experiments were initiated in order to characterize the performance of IQ PreAlert, a motor bearing condition assessment system developed at Rockwell. From that point on, the experimental program has expanded to provide a motor performance database which can be used to validate and/or improve a host of motor condition assessment techniques.
+
+Inspiration
+This dataset serves to the purpose of applying Machine Learning to Predictive Maintenance of industrial machinery. Iis scope is the data-driven fault diagnosis. A common task in this field is the fault detection and classification.
+
+#2. CWRU Bearing Dataset 
+
+About Dataset
+The CWRU dataset is a widely used benchmark for bearing fault classification algorithms. It contains vibration signal data of normal and faulty bearings.
+
+The dataset includes vibration signals of four classes of bearings measured in the experiment:
+
+Normal bearing without fault (N)
+Bearing with single point fault at the inner raceway (IR)
+Bearing with single point fault at the outer raceway (OR)
+Bearing with single point fault at the ball (B)
+
+The faults of different diameters (0.007 ~ 0.028 Inches) are artificially manufactured to the bearings. In the experiment, vibration signal data was recorded using accelerometers at the drive end (DE) and fan end (FE), and the data is stored as Matlab files. The sampling rate is 12 kHz, and each Matlab file contains between ~120k to ~240k sample points.
+
+The CWRU dataset is primarily used for multiclass classification of vibration signals of faulty bearings. It’s often used in the development and testing of machine learning models, particularly those involving signal processing and fault detection. For instance, 1D Convolutional Neural Networks (CNNs) have been successfully applied to fault classification based on signal data from this dataset.
+
+Thus, the CWRU dataset is a valuable resource for researchers and engineers working on bearing fault diagnosis and predictive maintenance applications. It provides a standardized set of data that can be used to develop, test, and compare different fault detection and classification algorithms
+
+#3. Market Pipe Thickness loss
+
+About Dataset
+🛢️ Predictive Maintenance for Oil & Gas Pipelines – 1000
+📌 Dataset Overview
+This dataset contains 1,000 samples of pipeline data collected from the oil and gas industry, intended for use in predictive maintenance modeling. Each record represents sensor and operational data from pipelines, with corresponding labels indicating whether maintenance was required.
+
+The goal is to develop models that can predict potential failures or maintenance needs before they occur, ensuring pipeline safety, reducing downtime, and minimizing operational costs.
+
+🧾 Data Features
+Each row in the dataset corresponds to a specific pipeline segment or instance and includes the following:
+
+Pipe Size: Diameter of the pipeline
+
+Thickness: Measured wall thickness of the pipe
+
+Material: Type of material used (e.g., steel, composite)
+
+Maximum Pressure: Peak pressure experienced (psi)
+
+Temperature: Internal fluid temperature (°C)
+
+Corrosion Impact Percentage: Estimated corrosion level (%)
+
+**Thickness Loss: **Loss of wall thickness due to wear or corrosion
+
+Material Loss Percentage: Percentage of overall material loss
+
+Year Times: Age or time in service (years)
+
+**Conditions: **Operational condition category (Normal, Moderate, Critical)
+
+Maintenance_Required (Target): Binary label (1 = maintenance needed, 0 = no maintenance)
+
+⚠️ This is synthetic data generated to reflect realistic conditions in oil and gas operations. It is suitable for training and testing machine learning models for predictive maintenance purposes.
+
+🎯 Use Cases
+Predictive maintenance modeling
+
+Classification and anomaly detection
+
+Feature importance and sensor optimization
+
+Exploratory data analysis (EDA) for oil and gas operations
+
+📊 Ideal For
+Data scientists working on industrial or IoT data
+
+Researchers focused on fault detection or reliability engineering
+
+ML practitioners developing predictive maintenance systems
+
+🧠 Suggested ML Tasks
+Binary Classification
+
+Time-Series Analysis (if timestamped versions available)
+
+Feature Engineering for sensor-based data
+
+Model Interpretability (e.g., SHAP, LIME)
+
+#4. Vibration dataset
+
+About Dataset
+This dataset contains vibration signals for the purpose of predictive fault diagnosis in single-stage, single-acting reciprocating air compressors. It includes data under five different operational states: normal (healthy), inlet valve fluttering, outlet valve fluttering, simultaneous inlet-outlet valve fluttering, and check valve faults.
+
+Each includes a variety of features derived from the time domain (statistical parameters), histogram-based representations, and Linear Predictive Coding (LPC) coefficients to capture the comprehensive behavior of the compressor under different fault conditions.
+
+#5. CMAPSS Jet Engine Simulated dataset
+
+About Dataset
+Overview:
+The NASA CMAPSS dataset consists of simulated jet engine sensor readings generated using the Commercial Modular Aero-Propulsion System Simulation (CMAPSS). It’s widely used for research in prognostics, health management, and remaining useful life (RUL) estimation.
+
+Contents:
+
+Training Data: Contains engine cycle information and sensor measurements.
+Test Data: Engine cycle data without RUL labels, to be predicted.
+RUL Values: Ground truth remaining useful life for the test engines.
+Applications:
+Ideal for time-series analysis, anomaly detection, and developing machine learning models focused on predictive maintenance.
+
+Attribution:
+Data provided by NASA’s CMAPSS simulation. For more details, please refer to the NASA Data Portal.
+https://data.nasa.gov/Aerospace/CMAPSS-Jet-Engine-Simulated-Data/ff5v-kuh6/about_data
+
+#6. Centrifugal Pump measurement data
+
+About Dataset
+Measurements depicting the healthy and maintenance-prone stages of two centrifugal pumps were collected in the Alexander Campus of the International Hellenic University under the supervision of Associated Professor Dimitrios Bechtsis. The dataset consists of 5,118 records and includes both running and standstill values.
+
+Embedded sensors of the Mitsubishi Electric FA Smart condition monitoring kit collected 5,118 rows of measurements depicting key features, namely velocity_ISO, rms_demodulation, rms_acceleration, peak-to-peak acceleration and temperatures from two centrifugal pumps of the same manufacturer, in a healthy (Machine ID 1) and maintenance-prone (Machine ID 2) state respectively.
+
+Experimented pumps work approximately every 5 minutes for a period of 1 minute filling a water tank, or in extreme cases when a large amount of water supply is requested. Following the extraction of NaN values after initial pre-processing, each pump individually outputted a sample of 2,557 rows for further analysis.
+
+This dataset can provide a training ground for data cleaning and data analysis procedures as well as predicting the health state of centrifugal pumps using ML and DL classification algorithms and key sensor measurements as input features.
+
+ACKNOWLEDGEMENTS
+
+We sincerely thank UTECO SA team, who generously provided knowledge, expertise, hardware and software equipment for the implementation of this research. UTECO SA is a technical equipment provider in the field of automation with vast expertise in industrial, marine applications and infrastructure projects. Additionally, we would like to thank Mr. Alexandros Kolokas and Mr. Michael Koutsiantzis for their valuable contribution in configuring the system during their undergraduate thesis.
+
+To cite the dataset cite this work: 'Predictive Maintenance framework for assessing health state of centrifugal pumps'
+https://ijai.iaescore.com/index.php/IJAI/article/view/23502
+DOI: 10.11591/ijai.v13.i1.pp850-862
+

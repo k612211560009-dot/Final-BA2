@@ -1,0 +1,9 @@
+{
+  "model_name": "Pump_Health_Predictor",
+  "algorithm": "Rule-based + LightGBM (planned)",
+  "task": "Regression + Classification",
+  "anomaly_rate": 0.283,
+  "features": 23,
+  "trained_date": "2025-11-15",
+  "status": "Rule-based (needs failure labels for supervised)"
+}

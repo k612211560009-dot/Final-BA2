@@ -1,0 +1,23 @@
+equipment_id,equipment_type,equipment_subtype,installation_date,design_lifetime_years,criticality_level,location,manufacturer,model,serial_number
+BEARING_001,Bearing,B007,2020-01-15,10,Medium,Plant_A_Unit_1,SKF,SKF_6205,SN-BEAR-1000
+BEARING_002,Bearing,B014,2020-01-15,10,Medium,Plant_A_Unit_2,SKF,SKF_6205,SN-BEAR-1001
+BEARING_003,Bearing,B021,2020-01-15,10,Medium,Plant_A_Unit_3,SKF,SKF_6205,SN-BEAR-1002
+BEARING_004,Bearing,IR007,2020-01-15,10,High,Plant_A_Unit_1,SKF,SKF_6205,SN-BEAR-1003
+BEARING_005,Bearing,IR014,2020-01-15,10,High,Plant_A_Unit_2,SKF,SKF_6205,SN-BEAR-1004
+BEARING_006,Bearing,IR021,2020-01-15,10,High,Plant_A_Unit_3,SKF,SKF_6205,SN-BEAR-1005
+BEARING_007,Bearing,OR0076,2020-01-15,10,High,Plant_A_Unit_1,SKF,SKF_6205,SN-BEAR-1006
+BEARING_008,Bearing,OR0146,2020-01-15,10,High,Plant_A_Unit_2,SKF,SKF_6205,SN-BEAR-1007
+BEARING_009,Bearing,OR0216,2020-01-15,10,High,Plant_A_Unit_3,SKF,SKF_6205,SN-BEAR-1008
+BEARING_010,Bearing,Normal,2020-01-15,10,Medium,Plant_A_Unit_1,SKF,SKF_6205,SN-BEAR-1009
+PUMP_001,Centrifugal Pump,Multistage,2019-06-10,15,High,Plant_B_Unit_1,Grundfos,CR-45,SN-PUMP-2001
+PUMP_002,Centrifugal Pump,Multistage,2019-06-10,15,High,Plant_B_Unit_2,Grundfos,CR-45,SN-PUMP-2002
+PUMP_003,Centrifugal Pump,Multistage,2019-06-10,15,High,Plant_B_Unit_3,Grundfos,CR-45,SN-PUMP-2003
+PUMP_004,Centrifugal Pump,Multistage,2019-06-10,15,High,Plant_B_Unit_4,Grundfos,CR-45,SN-PUMP-2004
+TURBINE_001,Gas Turbine,Single Shaft,2018-03-20,25,Critical,Plant_C_Unit_1,GE,LM2500,SN-TURB-3001
+TURBINE_002,Gas Turbine,Single Shaft,2018-03-20,25,Critical,Plant_C_Unit_2,GE,LM2500,SN-TURB-3002
+TURBINE_003,Gas Turbine,Single Shaft,2018-03-20,25,Critical,Plant_C_Unit_3,GE,LM2500,SN-TURB-3003
+PIPE_SEG_001,Pipeline,Carbon Steel,2015-09-01,30,High,Pipeline_Route_1,Tenaris,API-5L-X65,SN-PIPE-4001
+PIPE_SEG_002,Pipeline,Carbon Steel,2015-09-01,30,High,Pipeline_Route_2,Tenaris,API-5L-X65,SN-PIPE-4002
+PIPE_SEG_003,Pipeline,Carbon Steel,2015-09-01,30,Medium,Pipeline_Route_3,Tenaris,API-5L-X65,SN-PIPE-4003
+PIPE_SEG_004,Pipeline,Carbon Steel,2015-09-01,30,Medium,Pipeline_Route_4,Tenaris,API-5L-X65,SN-PIPE-4004
+PIPE_SEG_005,Pipeline,Carbon Steel,2015-09-01,30,Medium,Pipeline_Route_5,Tenaris,API-5L-X65,SN-PIPE-4005

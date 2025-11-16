@@ -1,0 +1,81 @@
+sensor_id,equipment_id,sensor_type,sensor_location,sampling_rate_hz,units,installation_date
+SENSOR_0001,BEARING_001,Vibration,Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0002,BEARING_001,Vibration,Non-Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0003,BEARING_001,Temperature,Housing,1.0,Celsius,2020-02-01
+SENSOR_0004,BEARING_002,Vibration,Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0005,BEARING_002,Vibration,Non-Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0006,BEARING_002,Temperature,Housing,1.0,Celsius,2020-02-01
+SENSOR_0007,BEARING_003,Vibration,Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0008,BEARING_003,Vibration,Non-Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0009,BEARING_003,Temperature,Housing,1.0,Celsius,2020-02-01
+SENSOR_0010,BEARING_004,Vibration,Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0011,BEARING_004,Vibration,Non-Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0012,BEARING_004,Temperature,Housing,1.0,Celsius,2020-02-01
+SENSOR_0013,BEARING_005,Vibration,Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0014,BEARING_005,Vibration,Non-Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0015,BEARING_005,Temperature,Housing,1.0,Celsius,2020-02-01
+SENSOR_0016,BEARING_006,Vibration,Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0017,BEARING_006,Vibration,Non-Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0018,BEARING_006,Temperature,Housing,1.0,Celsius,2020-02-01
+SENSOR_0019,BEARING_007,Vibration,Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0020,BEARING_007,Vibration,Non-Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0021,BEARING_007,Temperature,Housing,1.0,Celsius,2020-02-01
+SENSOR_0022,BEARING_008,Vibration,Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0023,BEARING_008,Vibration,Non-Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0024,BEARING_008,Temperature,Housing,1.0,Celsius,2020-02-01
+SENSOR_0025,BEARING_009,Vibration,Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0026,BEARING_009,Vibration,Non-Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0027,BEARING_009,Temperature,Housing,1.0,Celsius,2020-02-01
+SENSOR_0028,BEARING_010,Vibration,Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0029,BEARING_010,Vibration,Non-Drive End,12000.0,mm/s,2020-02-01
+SENSOR_0030,BEARING_010,Temperature,Housing,1.0,Celsius,2020-02-01
+SENSOR_0031,PUMP_001,Vibration,Pump_Body,12000.0,mm/s,2019-07-01
+SENSOR_0032,PUMP_001,Temperature,Pump_Body,1.0,Celsius,2019-07-01
+SENSOR_0033,PUMP_001,Pressure_Suction,Piping,1.0,bar,2019-07-01
+SENSOR_0034,PUMP_001,Pressure_Discharge,Piping,1.0,bar,2019-07-01
+SENSOR_0035,PUMP_001,Flow_Rate,Piping,1.0,m3/h,2019-07-01
+SENSOR_0036,PUMP_002,Vibration,Pump_Body,12000.0,mm/s,2019-07-01
+SENSOR_0037,PUMP_002,Temperature,Pump_Body,1.0,Celsius,2019-07-01
+SENSOR_0038,PUMP_002,Pressure_Suction,Piping,1.0,bar,2019-07-01
+SENSOR_0039,PUMP_002,Pressure_Discharge,Piping,1.0,bar,2019-07-01
+SENSOR_0040,PUMP_002,Flow_Rate,Piping,1.0,m3/h,2019-07-01
+SENSOR_0041,PUMP_003,Vibration,Pump_Body,12000.0,mm/s,2019-07-01
+SENSOR_0042,PUMP_003,Temperature,Pump_Body,1.0,Celsius,2019-07-01
+SENSOR_0043,PUMP_003,Pressure_Suction,Piping,1.0,bar,2019-07-01
+SENSOR_0044,PUMP_003,Pressure_Discharge,Piping,1.0,bar,2019-07-01
+SENSOR_0045,PUMP_003,Flow_Rate,Piping,1.0,m3/h,2019-07-01
+SENSOR_0046,PUMP_004,Vibration,Pump_Body,12000.0,mm/s,2019-07-01
+SENSOR_0047,PUMP_004,Temperature,Pump_Body,1.0,Celsius,2019-07-01
+SENSOR_0048,PUMP_004,Pressure_Suction,Piping,1.0,bar,2019-07-01
+SENSOR_0049,PUMP_004,Pressure_Discharge,Piping,1.0,bar,2019-07-01
+SENSOR_0050,PUMP_004,Flow_Rate,Piping,1.0,m3/h,2019-07-01
+SENSOR_0051,TURBINE_001,Vibration,Turbine_Casing,10000.0,mm/s,2018-04-01
+SENSOR_0052,TURBINE_001,Temperature_Exhaust,Exhaust,1.0,Celsius,2018-04-01
+SENSOR_0053,TURBINE_001,Temperature_Bearing,Bearing,1.0,Celsius,2018-04-01
+SENSOR_0054,TURBINE_001,Pressure_Compressor,Bearing,1.0,bar,2018-04-01
+SENSOR_0055,TURBINE_001,Speed_RPM,Bearing,1.0,rpm,2018-04-01
+SENSOR_0056,TURBINE_002,Vibration,Turbine_Casing,10000.0,mm/s,2018-04-01
+SENSOR_0057,TURBINE_002,Temperature_Exhaust,Exhaust,1.0,Celsius,2018-04-01
+SENSOR_0058,TURBINE_002,Temperature_Bearing,Bearing,1.0,Celsius,2018-04-01
+SENSOR_0059,TURBINE_002,Pressure_Compressor,Bearing,1.0,bar,2018-04-01
+SENSOR_0060,TURBINE_002,Speed_RPM,Bearing,1.0,rpm,2018-04-01
+SENSOR_0061,TURBINE_003,Vibration,Turbine_Casing,10000.0,mm/s,2018-04-01
+SENSOR_0062,TURBINE_003,Temperature_Exhaust,Exhaust,1.0,Celsius,2018-04-01
+SENSOR_0063,TURBINE_003,Temperature_Bearing,Bearing,1.0,Celsius,2018-04-01
+SENSOR_0064,TURBINE_003,Pressure_Compressor,Bearing,1.0,bar,2018-04-01
+SENSOR_0065,TURBINE_003,Speed_RPM,Bearing,1.0,rpm,2018-04-01
+SENSOR_0066,PIPE_SEG_001,Ultrasonic_Thickness,Pipe_Wall,0.01,mm,2016-01-01
+SENSOR_0067,PIPE_SEG_001,Temperature,Pipe_Wall,0.1,Celsius,2016-01-01
+SENSOR_0068,PIPE_SEG_001,Pressure,Pipe_Wall,0.1,bar,2016-01-01
+SENSOR_0069,PIPE_SEG_002,Ultrasonic_Thickness,Pipe_Wall,0.01,mm,2016-01-01
+SENSOR_0070,PIPE_SEG_002,Temperature,Pipe_Wall,0.1,Celsius,2016-01-01
+SENSOR_0071,PIPE_SEG_002,Pressure,Pipe_Wall,0.1,bar,2016-01-01
+SENSOR_0072,PIPE_SEG_003,Ultrasonic_Thickness,Pipe_Wall,0.01,mm,2016-01-01
+SENSOR_0073,PIPE_SEG_003,Temperature,Pipe_Wall,0.1,Celsius,2016-01-01
+SENSOR_0074,PIPE_SEG_003,Pressure,Pipe_Wall,0.1,bar,2016-01-01
+SENSOR_0075,PIPE_SEG_004,Ultrasonic_Thickness,Pipe_Wall,0.01,mm,2016-01-01
+SENSOR_0076,PIPE_SEG_004,Temperature,Pipe_Wall,0.1,Celsius,2016-01-01
+SENSOR_0077,PIPE_SEG_004,Pressure,Pipe_Wall,0.1,bar,2016-01-01
+SENSOR_0078,PIPE_SEG_005,Ultrasonic_Thickness,Pipe_Wall,0.01,mm,2016-01-01
+SENSOR_0079,PIPE_SEG_005,Temperature,Pipe_Wall,0.1,Celsius,2016-01-01
+SENSOR_0080,PIPE_SEG_005,Pressure,Pipe_Wall,0.1,bar,2016-01-01
