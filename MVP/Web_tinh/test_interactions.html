@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Dashboard Interactions</title>
+  <style>
+    body { font-family: Arial; padding: 2rem; background: #f3f4f6; }
+    .test-section { background: white; padding: 1.5rem; margin-bottom: 1rem; border-radius: 0.5rem; }
+    .test-section h3 { color: #1f2937; margin-bottom: 1rem; }
+    .test-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; }
+    .test-item input[type="checkbox"] { width: 1.25rem; height: 1.25rem; }
+    .status { padding: 0.25rem 0.75rem; border-radius: 0.25rem; font-size: 0.875rem; }
+    .success { background: #dcfce7; color: #166534; }
+    .pending { background: #fef3c7; color: #92400e; }
+  </style>
+</head>
+<body>
+  <h1>��� Dashboard Interaction Test Checklist</h1>
+  
+  <div class="test-section">
+    <h3>1. Header Dropdowns (3 filters)</h3>
+    <div class="test-item">
+      <input type="checkbox" id="test1">
+      <label for="test1">Time Range dropdown shows hover effect (blue border)</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test2">
+      <label for="test2">Time Range selection shows active state (green) + toast</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test3">
+      <label for="test3">Department filter shows hover + active state</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test4">
+      <label for="test4">Department filter shows toast with emoji</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test5">
+      <label for="test5">Area select switches view + shows toast</label>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h3>2. Department Cards (Reports tab)</h3>
+    <div class="test-item">
+      <input type="checkbox" id="test6">
+      <label for="test6">Click card → Checkbox auto toggles</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test7">
+      <label for="test7">Selected card shows blue border + light blue background</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test8">
+      <label for="test8">Toast shows "✅ Đã chọn: [Department]"</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test9">
+      <label for="test9">Send button updates counter: "Gửi Báo cáo (3)"</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test10">
+      <label for="test10">Deselect card shows "❌ Bỏ chọn" toast</label>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h3>3. Report Actions</h3>
+    <div class="test-item">
+      <input type="checkbox" id="test11">
+      <label for="test11">Send without selection → Shake animation + error toast</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test12">
+      <label for="test12">Send with selection → Loading → Success panel</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test13">
+      <label for="test13">Success toast: "✅ Gửi [N] báo cáo thành công!"</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test14">
+      <label for="test14">Schedule without selection → Error toast + shake</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test15">
+      <label for="test15">Schedule with selection → Shows next send time</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test16">
+      <label for="test16">Report frequency dropdown changes schedule text</label>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h3>4. Toast Notifications</h3>
+    <div class="test-item">
+      <input type="checkbox" id="test17">
+      <label for="test17">Toast appears at top-right corner</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test18">
+      <label for="test18">Toast slides in from right smoothly</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test19">
+      <label for="test19">Toast auto-dismisses after 2 seconds</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test20">
+      <label for="test20">Success toast is green, error is red, info is blue</label>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h3>5. Visual Effects</h3>
+    <div class="test-item">
+      <input type="checkbox" id="test21">
+      <label for="test21">Dropdowns show active state for 1 second</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test22">
+      <label for="test22">Cards have scale animation on click</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test23">
+      <label for="test23">Shake animation wiggles left-right</label>
+    </div>
+    <div class="test-item">
+      <input type="checkbox" id="test24">
+      <label for="test24">Real-time indicator pulses green</label>
+    </div>
+  </div>
+
+  <div style="margin-top: 2rem; padding: 1.5rem; background: #dbeafe; border-radius: 0.5rem; border-left: 4px solid #3b82f6;">
+    <h3 style="margin: 0 0 0.5rem 0;">��� Test Instructions:</h3>
+    <ol style="margin: 0; padding-left: 1.5rem;">
+      <li>Open <code>web.htm</code> in browser</li>
+      <li>Test each item in checklist above</li>
+      <li>Check all items that work correctly</li>
+      <li>Report any unchecked items as issues</li>
+    </ol>
+  </div>
+
+  <script>
+    // Auto-save progress
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      const key = 'test_' + cb.id;
+      cb.checked = localStorage.getItem(key) === 'true';
+      cb.addEventListener('change', () => {
+        localStorage.setItem(key, cb.checked);
+        updateProgress();
+      });
+    });
+
+    function updateProgress() {
+      const total = document.querySelectorAll('input[type="checkbox"]').length;
+      const checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
+      const percent = Math.round((checked / total) * 100);
+      document.title = `Test Progress: ${checked}/${total} (${percent}%)`;
+    }
+    updateProgress();
+  </script>
+</body>
+</html>

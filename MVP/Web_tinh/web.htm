@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="predictions.css" />
+    <title>Dashboard Dự đoán Downtime Nhà máy</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <!-- Header -->
+    <div class="header">
+      <div class="header-content">
+        <div class="header-title">
+          <h1>Dashboard Thiết Bị Tại Nhà Máy</h1>
+          <p>Giám sát tình trạng thiết bị và dự đoán thời gian ngừng máy</p>
+          <div style="font-size: 0.875rem; color: #10b981; margin-top: 0.25rem;">
+            <span id="realtimeIndicator">🟢</span> Real-time | <span id="lastUpdate">Đang cập nhật...</span>
+          </div>
+        </div>
+        <div class="header-controls">
+          <select
+            id="timeRange"
+            onchange="updateDashboardTimeRange(this.value)"
+          >
+            <option value="7">7 ngày</option>
+            <option value="30">30 ngày</option>
+            <option value="90" selected>90 ngày</option>
+            <option value="180">180 ngày</option>
+            <option value="365">1 năm</option>
+          </select>
+          <select id="areaSelect" onchange="handleAreaSelectChange(this.value)">
+            <option value="overview">Tổng quan</option>
+            <option value="pipeline">Hệ thống Pipeline</option>
+            <option value="bearing">Hệ thống Bearing</option>
+            <option value="pump">Hệ thống Pump</option>
+            <option value="turbine">Hệ thống Turbine</option>
+            <option value="compressor">Hệ thống Compressor</option>
+          </select>
+          <div class="dashboard-tabs">
+            <button class="tab-btn active" data-view="analytics" onclick="switchDashboardView('analytics')">
+              📊 Analytics
+            </button>
+            <button class="tab-btn" data-view="reports" onclick="switchDashboardView('reports')">
+              📧 Reports
+            </button>
+            <button class="tab-btn" data-view="models" onclick="switchDashboardView('models')">
+              🤖 Models
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overview Screen -->
+    <div id="overviewScreen">
+      <!-- KPIs -->
+      <div class="kpi-grid">
+        <div class="kpi-card blue">
+          <div class="kpi-content">
+            <div>
+              <div class="kpi-label">Tổng số Thiết bị</div>
+              <div class="kpi-value" style="color: #1f2937" id="totalEquipment">
+                121
+              </div>
+            </div>
+            <div class="kpi-icon">📊</div>
+          </div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-content">
+            <div>
+              <div class="kpi-label">Cảnh báo Critical</div>
+              <div class="kpi-value" style="color: #dc2626" id="criticalAlerts">
+                3
+              </div>
+            </div>
+            <div class="kpi-icon">⚠️</div>
+          </div>
+        </div>
+        <div class="kpi-card orange">
+          <div class="kpi-content">
+            <div>
+              <div class="kpi-label">Downtime Dự đoán</div>
+              <div
+                class="kpi-value"
+                style="color: #f97316"
+                id="predictedDowntime"
+              >
+                40h
+              </div>
+              <div style="font-size: 0.75rem; color: #6b7280">7 ngày tới</div>
+            </div>
+            <div class="kpi-icon">⏰</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREDICTIONS SECTION -->
+      <div style="margin-bottom: 1.5rem">
+        <h2
+          style="
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            color: #1f2937;
+            font-weight: 600;
+          "
+        >
+          <span style="margin-right: 0.5rem">🔮</span>Dự Đoán Thiết Bị
+        </h2>
+
+        <div class="chart-container" style="padding: 1.25rem">
+          <!-- Filter tabs -->
+          <div
+            style="
+              margin-bottom: 1rem;
+              display: flex;
+              gap: 0.625rem;
+              flex-wrap: wrap;
+            "
+          >
+            <button
+              class="pred-filter-btn active"
+              data-filter="all"
+              style="
+                padding: 0.5rem 1rem;
+                border: 2px solid #10b981;
+                background: #10b981;
+                color: white;
+                border-radius: 0.375rem;
+                cursor: pointer;
+                font-weight: 500;
+                font-size: 0.875rem;
+                transition: all 0.2s;
+              "
+            >
+              Tất cả (121)
+            </button>
+            <button
+              class="pred-filter-btn"
+              data-filter="high-risk"
+              style="
+                padding: 0.5rem 1rem;
+                border: 2px solid #ef4444;
+                background: white;
+                color: #ef4444;
+                border-radius: 0.375rem;
+                cursor: pointer;
+                font-weight: 500;
+                font-size: 0.875rem;
+                transition: all 0.2s;
+              "
+            >
+              Rủi ro cao
+            </button>
+            <button
+              class="pred-filter-btn"
+              data-filter="compressor"
+              style="
+                padding: 0.5rem 1rem;
+                border: 2px solid #3b82f6;
+                background: white;
+                color: #3b82f6;
+                border-radius: 0.375rem;
+                cursor: pointer;
+                font-weight: 500;
+                font-size: 0.875rem;
+                transition: all 0.2s;
+              "
+            >
+              Compressor (3)
+            </button>
+            <button
+              class="pred-filter-btn"
+              data-filter="turbine"
+              style="
+                padding: 0.5rem 1rem;
+                border: 2px solid #f59e0b;
+                background: white;
+                color: #f59e0b;
+                border-radius: 0.375rem;
+                cursor: pointer;
+                font-weight: 500;
+                font-size: 0.875rem;
+                transition: all 0.2s;
+              "
+            >
+              Turbine (101)
+            </button>
+            <button
+              class="pred-filter-btn"
+              data-filter="pipeline"
+              style="
+                padding: 0.5rem 1rem;
+                border: 2px solid #8b5cf6;
+                background: white;
+                color: #8b5cf6;
+                border-radius: 0.375rem;
+                cursor: pointer;
+                font-weight: 500;
+                font-size: 0.875rem;
+                transition: all 0.2s;
+              "
+            >
+              Pipeline (5)
+            </button>
+          </div>
+
+          <!-- Predictions table -->
+          <div style="overflow-x: auto">
+            <table
+              id="predictionsTable"
+              style="
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 0.8125rem;
+              "
+            >
+              <thead>
+                <tr style="background: #f9fafb; text-align: left">
+                  <th
+                    style="
+                      padding: 0.75rem;
+                      border-bottom: 2px solid #e5e7eb;
+                      font-weight: 600;
+                      color: #374151;
+                    "
+                  >
+                    Thiết bị
+                  </th>
+                  <th
+                    style="
+                      padding: 0.75rem;
+                      border-bottom: 2px solid #e5e7eb;
+                      font-weight: 600;
+                      color: #374151;
+                    "
+                  >
+                    Loại
+                  </th>
+                  <th
+                    style="
+                      padding: 0.75rem;
+                      border-bottom: 2px solid #e5e7eb;
+                      font-weight: 600;
+                      color: #374151;
+                    "
+                  >
+                    Mô hình
+                  </th>
+                  <th
+                    style="
+                      padding: 0.75rem;
+                      border-bottom: 2px solid #e5e7eb;
+                      font-weight: 600;
+                      color: #374151;
+                    "
+                  >
+                    RUL dự đoán
+                  </th>
+                  <th
+                    style="
+                      padding: 0.75rem;
+                      border-bottom: 2px solid #e5e7eb;
+                      font-weight: 600;
+                      color: #374151;
+                    "
+                  >
+                    Hiệu suất
+                  </th>
+                  <th
+                    style="
+                      padding: 0.75rem;
+                      border-bottom: 2px solid #e5e7eb;
+                      font-weight: 600;
+                      color: #374151;
+                    "
+                  >
+                    Rủi ro
+                  </th>
+                  <th
+                    style="
+                      padding: 0.75rem;
+                      border-bottom: 2px solid #e5e7eb;
+                      font-weight: 600;
+                      color: #374151;
+                    "
+                  >
+                    Độ tin cậy
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="predictionsTableBody">
+                <!-- Will be populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+
+          <div
+            id="predictionsPagination"
+            style="
+              margin-top: 1rem;
+              text-align: center;
+              color: #6b7280;
+              font-size: 0.875rem;
+            "
+          >
+            <!-- Pagination controls -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+          gap: 1.5rem;
+          margin-bottom: 1.5rem;
+        "
+      >
+        <div class="chart-container">
+          <div class="chart-title">
+            📊 Phân bổ Rủi ro Toàn nhà máy
+            <span class="trend-indicator trend-stable" style="margin-left: 0.5rem;">↔️ Ổn định</span>
+          </div>
+          <canvas id="riskChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <div class="chart-title">
+            🗺️ Rủi ro theo Khu vực
+            <span class="trend-indicator trend-up" style="margin-left: 0.5rem;">↗️ +2 alerts</span>
+          </div>
+          <div class="area-list" id="areaList"></div>
+        </div>
+      </div>
+
+      <!-- Advanced Analytics Charts -->
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+          gap: 1.5rem;
+          margin-bottom: 1.5rem;
+        "
+      >
+        <div class="chart-container">
+          <div class="chart-title">
+            📈 Xu hướng RUL theo Thời gian
+            <span class="trend-indicator trend-down" style="margin-left: 0.5rem;">↘️ -5h avg</span>
+          </div>
+          <canvas id="rulTimeSeriesChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <div class="chart-title">
+            🔧 Hiệu suất Thiết bị theo Loại
+            <span class="trend-indicator trend-up" style="margin-left: 0.5rem;">↗️ +2.3%</span>
+          </div>
+          <canvas id="efficiencyByTypeChart"></canvas>
+        </div>
+      </div>
+
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+          gap: 1.5rem;
+          margin-bottom: 1.5rem;
+        "
+      >
+        <div class="chart-container">
+          <div class="chart-title">
+            ⚠️ Cảnh báo theo Tuần
+            <span class="trend-indicator trend-down" style="margin-left: 0.5rem;">↘️ -3 từ tuần trước</span>
+          </div>
+          <canvas id="alertsTimelineChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <div class="chart-title">
+            🎯 Độ tin cậy Dự đoán
+            <span class="trend-indicator trend-up" style="margin-left: 0.5rem;">↗️ 87% avg</span>
+          </div>
+          <canvas id="confidenceDistributionChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Dashboard Views Container -->
+      <div id="dashboardViewsContainer">
+        
+        <!-- Reports View (Hidden by default) -->
+        <div id="reportsView" class="dashboard-view hidden">
+          <div class="chart-container" style="margin-bottom: 1.5rem">
+            <div class="chart-title">📧 Gửi Báo cáo Dashboard theo Thiết bị</div>
+            <div style="padding: 1rem">
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                  gap: 1rem;
+                  margin-bottom: 1rem;
+                "
+              >
+                <div
+                  class="department-card"
+                  onclick="toggleEquipmentSelection('pipeline')"
+                >
+                  <div style="display: flex; align-items: center; gap: 0.5rem">
+                    <input
+                      type="checkbox"
+                      id="equip-pipeline"
+                      class="dept-checkbox"
+                    />
+                    <label style="flex: 1; cursor: pointer; font-weight: 500"
+                      >🔧 Pipeline</label
+                    >
+                  </div>
+                  <div
+                    style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem"
+                  >
+                    5 units - Corrosion analysis
+                  </div>
+                </div>
+                <div
+                  class="department-card"
+                  onclick="toggleEquipmentSelection('bearing')"
+                >
+                  <div style="display: flex; align-items: center; gap: 0.5rem">
+                    <input
+                      type="checkbox"
+                      id="equip-bearing"
+                      class="dept-checkbox"
+                    />
+                    <label style="flex: 1; cursor: pointer; font-weight: 500"
+                      >⚙️ Bearing</label
+                    >
+                  </div>
+                  <div
+                    style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem"
+                  >
+                    10 units - Vibration monitoring
+                  </div>
+                </div>
+                <div
+                  class="department-card"
+                  onclick="toggleEquipmentSelection('pump')"
+                >
+                  <div style="display: flex; align-items: center; gap: 0.5rem">
+                    <input
+                      type="checkbox"
+                      id="equip-pump"
+                      class="dept-checkbox"
+                    />
+                    <label style="flex: 1; cursor: pointer; font-weight: 500"
+                      >💧 Pump</label
+                    >
+                  </div>
+                  <div
+                    style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem"
+                  >
+                    34 units - Performance tracking
+                  </div>
+                </div>
+                <div
+                  class="department-card"
+                  onclick="toggleEquipmentSelection('turbine')"
+                >
+                  <div style="display: flex; align-items: center; gap: 0.5rem">
+                    <input
+                      type="checkbox"
+                      id="equip-turbine"
+                      class="dept-checkbox"
+                    />
+                    <label style="flex: 1; cursor: pointer; font-weight: 500"
+                      >🌪️ Turbine</label
+                    >
+                  </div>
+                  <div
+                    style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem"
+                  >
+                    21 units - Efficiency analysis
+                  </div>
+                </div>
+                <div
+                  class="department-card"
+                  onclick="toggleEquipmentSelection('compressor')"
+                >
+                  <div style="display: flex; align-items: center; gap: 0.5rem">
+                    <input
+                      type="checkbox"
+                      id="equip-compressor"
+                      class="dept-checkbox"
+                    />
+                    <label style="flex: 1; cursor: pointer; font-weight: 500"
+                      >🏭 Compressor</label
+                    >
+                  </div>
+                  <div
+                    style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem"
+                  >
+                    51 units - RUL prediction
+                  </div>
+                </div>
+              </div>
+
+              <div
+                style="
+                  display: flex;
+                  gap: 0.75rem;
+                  align-items: center;
+                  flex-wrap: wrap;
+                "
+              >
+                <button
+                  class="btn-send-report"
+                  onclick="sendReportToDepartments()"
+                  style="flex: 1; min-width: 200px"
+                >
+                  📤 Gửi Báo cáo
+                </button>
+                <button
+                  class="btn-schedule-report"
+                  onclick="scheduleReport()"
+                  style="flex: 1; min-width: 200px"
+                >
+                  ⏰ Lên Lịch Gửi
+                </button>
+                <select
+                  id="reportFrequency"
+                  style="
+                    padding: 0.5rem;
+                    border: 1px solid #d1d5db;
+                    border-radius: 0.375rem;
+                    min-width: 150px;
+                  "
+                >
+                  <option value="daily">Hàng ngày</option>
+                  <option value="weekly">Hàng tuần</option>
+                  <option value="monthly">Hàng tháng</option>
+                </select>
+              </div>
+
+              <div
+                id="reportStatusPanel"
+                style="
+                  margin-top: 1rem;
+                  padding: 1rem;
+                  background: #f9fafb;
+                  border-radius: 0.375rem;
+                  display: none;
+                "
+              >
+                <div id="reportStatusContent"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Models View (Hidden by default) -->
+        <div id="modelsView" class="dashboard-view hidden">
+          <div class="chart-container" style="margin-bottom: 1.5rem">
+            <div class="chart-title">🤖 Model Performance Summary</div>
+            <div style="padding: 1rem">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                <div class="model-card">
+                  <div class="model-header">
+                    <span style="font-size: 1.5rem;">🔧</span>
+                    <div>
+                      <div style="font-weight: 600;">Pipeline Model</div>
+                      <div style="font-size: 0.75rem; color: #6b7280;">LSTM + Attention</div>
+                    </div>
+                  </div>
+                  <div class="model-metrics">
+                    <div class="metric-item">
+                      <span class="metric-label">Accuracy</span>
+                      <span class="metric-value">94.2%</span>
+                    </div>
+                    <div class="metric-item">
+                      <span class="metric-label">MAE</span>
+                      <span class="metric-value">2.3 days</span>
+                    </div>
+                    <div class="metric-item">
+                      <span class="metric-label">Samples</span>
+                      <span class="metric-value">5 units</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="model-card">
+                  <div class="model-header">
+                    <span style="font-size: 1.5rem;">⚙️</span>
+                    <div>
+                      <div style="font-weight: 600;">Bearing Model</div>
+                      <div style="font-size: 0.75rem; color: #6b7280;">CNN-LSTM Hybrid</div>
+                    </div>
+                  </div>
+                  <div class="model-metrics">
+                    <div class="metric-item">
+                      <span class="metric-label">Accuracy</span>
+                      <span class="metric-value">96.8%</span>
+                    </div>
+                    <div class="metric-item">
+                      <span class="metric-label">MAE</span>
+                      <span class="metric-value">1.8 days</span>
+                    </div>
+                    <div class="metric-item">
+                      <span class="metric-label">Samples</span>
+                      <span class="metric-value">10 units</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="model-card">
+                  <div class="model-header">
+                    <span style="font-size: 1.5rem;">💧</span>
+                    <div>
+                      <div style="font-weight: 600;">Pump Model</div>
+                      <div style="font-size: 0.75rem; color: #6b7280;">Random Forest</div>
+                    </div>
+                  </div>
+                  <div class="model-metrics">
+                    <div class="metric-item">
+                      <span class="metric-label">Accuracy</span>
+                      <span class="metric-value">92.5%</span>
+                    </div>
+                    <div class="metric-item">
+                      <span class="metric-label">MAE</span>
+                      <span class="metric-value">3.1 days</span>
+                    </div>
+                    <div class="metric-item">
+                      <span class="metric-label">Samples</span>
+                      <span class="metric-value">3 units</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="model-card">
+                  <div class="model-header">
+                    <span style="font-size: 1.5rem;">🌀</span>
+                    <div>
+                      <div style="font-weight: 600;">Turbine Model</div>
+                      <div style="font-size: 0.75rem; color: #6b7280;">Deep LSTM</div>
+                    </div>
+                  </div>
+                  <div class="model-metrics">
+                    <div class="metric-item">
+                      <span class="metric-label">Accuracy</span>
+                      <span class="metric-value">95.7%</span>
+                    </div>
+                    <div class="metric-item">
+                      <span class="metric-label">MAE</span>
+                      <span class="metric-value">2.0 days</span>
+                    </div>
+                    <div class="metric-item">
+                      <span class="metric-label">Samples</span>
+                      <span class="metric-value">101 units</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="model-card">
+                  <div class="model-header">
+                    <span style="font-size: 1.5rem;">🔄</span>
+                    <div>
+                      <div style="font-weight: 600;">Compressor Model</div>
+                      <div style="font-size: 0.75rem; color: #6b7280;">XGBoost</div>
+                    </div>
+                  </div>
+                  <div class="model-metrics">
+                    <div class="metric-item">
+                      <span class="metric-label">Accuracy</span>
+                      <span class="metric-value">93.4%</span>
+                    </div>
+                    <div class="metric-item">
+                      <span class="metric-label">MAE</span>
+                      <span class="metric-value">2.7 days</span>
+                    </div>
+                    <div class="metric-item">
+                      <span class="metric-label">Samples</span>
+                      <span class="metric-value">2 units</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 1rem; border-radius: 0.375rem;">
+                <div style="font-weight: 600; margin-bottom: 0.5rem;">📁 Model Storage Structure</div>
+                <div style="font-size: 0.875rem; color: #374151; line-height: 1.6;">
+                  Models are stored in: <code>d:/Final BA2/models/saved_models/</code><br/>
+                  Structure: <code>[equipment_type]/model_[version].pkl</code><br/>
+                  • Pipeline: Thickness loss prediction models<br/>
+                  • Bearing/Turbine: Vibration-based RUL models (CMaps dataset)<br/>
+                  • Compressor/Pump: Multi-sensor anomaly detection<br/><br/>
+                  📊 Predictions generated from models are displayed in dashboard charts and tables above.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+              gap: 1rem;
+              margin-bottom: 1rem;
+            "
+          >
+            <div
+              class="department-card"
+              onclick="toggleDepartmentSelection('production')"
+            >
+              <div style="display: flex; align-items: center; gap: 0.5rem">
+                <input
+                  type="checkbox"
+                  id="dept-production"
+                  class="dept-checkbox"
+                />
+                <label style="flex: 1; cursor: pointer; font-weight: 500"
+                  >🏭 Sản xuất</label
+                >
+              </div>
+              <div
+                style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem"
+              >
+                Trạng thái thiết bị & RUL
+              </div>
+            </div>
+            <div
+              class="department-card"
+              onclick="toggleDepartmentSelection('maintenance')"
+            >
+              <div style="display: flex; align-items: center; gap: 0.5rem">
+                <input
+                  type="checkbox"
+                  id="dept-maintenance"
+                  class="dept-checkbox"
+                />
+                <label style="flex: 1; cursor: pointer; font-weight: 500"
+                  >🔧 Bảo trì</label
+                >
+              </div>
+              <div
+                style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem"
+              >
+                Kế hoạch bảo trì dự phòng
+              </div>
+            </div>
+            <div
+              class="department-card"
+              onclick="toggleDepartmentSelection('quality')"
+            >
+              <div style="display: flex; align-items: center; gap: 0.5rem">
+                <input
+                  type="checkbox"
+                  id="dept-quality"
+                  class="dept-checkbox"
+                />
+                <label style="flex: 1; cursor: pointer; font-weight: 500"
+                  >✅ Kiểm định</label
+                >
+              </div>
+              <div
+                style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem"
+              >
+                Chỉ số chất lượng & anomaly
+              </div>
+            </div>
+            <div
+              class="department-card"
+              onclick="toggleDepartmentSelection('logistics')"
+            >
+              <div style="display: flex; align-items: center; gap: 0.5rem">
+                <input
+                  type="checkbox"
+                  id="dept-logistics"
+                  class="dept-checkbox"
+                />
+                <label style="flex: 1; cursor: pointer; font-weight: 500"
+                  >🚛 Vận hành</label
+                >
+              </div>
+              <div
+                style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem"
+              >
+                Lịch downtime & dự trữ
+              </div>
+            </div>
+            <div
+              class="department-card"
+              onclick="toggleDepartmentSelection('management')"
+            >
+              <div style="display: flex; align-items: center; gap: 0.5rem">
+                <input
+                  type="checkbox"
+                  id="dept-management"
+                  class="dept-checkbox"
+                />
+                <label style="flex: 1; cursor: pointer; font-weight: 500"
+                  >💼 Ban Giám đốc</label
+                >
+              </div>
+              <div
+                style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem"
+              >
+                Tóm tắt tổng quan & KPI
+              </div>
+            </div>
+            <div
+              class="department-card"
+              onclick="toggleDepartmentSelection('finance')"
+            >
+              <div style="display: flex; align-items: center; gap: 0.5rem">
+                <input
+                  type="checkbox"
+                  id="dept-finance"
+                  class="dept-checkbox"
+                />
+                <label style="flex: 1; cursor: pointer; font-weight: 500"
+                  >💰 Tài chính</label
+                >
+              </div>
+              <div
+                style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem"
+              >
+                Chi phí downtime & ROI
+              </div>
+            </div>
+          </div>
+
+          <div
+            id="reportStatusPanel"
+            style="
+              margin-top: 1rem;
+              padding: 1rem;
+              background: #f9fafb;
+              border-radius: 0.375rem;
+              display: none;
+            "
+          >
+            <div id="reportStatusContent"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detail Screen -->
+    <div id="detailScreen" class="hidden">
+      <!-- Detail KPIs -->
+      <div class="kpi-grid">
+        <div class="kpi-card blue">
+          <div class="kpi-content">
+            <div>
+              <div class="kpi-label">RUL Trung bình</div>
+              <div class="kpi-value" style="color: #2563eb" id="detailRUL">
+                45h
+              </div>
+              <div class="progress-bar">
+                <div
+                  class="progress-fill"
+                  id="rulProgress"
+                  style="width: 45%"
+                ></div>
+              </div>
+            </div>
+            <div class="kpi-icon">📉</div>
+          </div>
+        </div>
+        <div class="kpi-card orange">
+          <div class="kpi-content">
+            <div>
+              <div class="kpi-label">Downtime Dự đoán</div>
+              <div class="kpi-value" style="color: #f97316" id="detailDowntime">
+                12h
+              </div>
+              <div style="font-size: 0.75rem; color: #6b7280">7 ngày tới</div>
+            </div>
+            <div class="kpi-icon">⏰</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RUL Trend -->
+      <div class="chart-container">
+        <div class="chart-title">Xu hướng RUL vs Ngưỡng Bảo trì</div>
+        <canvas id="rulTrendChart"></canvas>
+      </div>
+
+      <!-- Alerts -->
+      <div class="alert-frame">
+        <div class="alert-header">🔔 Cảnh báo & Thông báo</div>
+        <div class="alert-list" id="alertList"></div>
+      </div>
+    </div>
+
+    <!-- Notification Panel -->
+    <div class="notification-panel" id="notificationPanel">
+      <div class="notification-header">🔔 Lịch sử Thông báo</div>
+      <div id="notificationList"></div>
+    </div>
+  </body>
+</html>
