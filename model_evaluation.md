@@ -1,4 +1,4 @@
-# 🎯 Model Selection Results - Final Summary
+# Model Evaluation Results - Final Summary
 
 ## Overview
 
@@ -30,7 +30,7 @@ This document summarizes the model selection process, performance comparison, an
 
 ---
 
-## 1. 🚁 Turbine - RUL Prediction
+## 1. Turbine - RUL Prediction
 
 ### Model Selection Process - UPDATED Nov 19, 2025
 
@@ -109,6 +109,8 @@ This document summarizes the model selection process, performance comparison, an
 
 **Conclusion:** XGBoost model is production-ready and saved to `models/saved_models/turbine/xgb_turbine_rul_20251119_060822.json`.
 
+**Note:** This is the final selected model after comparing Linear Regression, LightGBM, and XGBoost algorithms.
+
 ### Visualization Results
 
 #### RUL Prediction Performance
@@ -143,7 +145,7 @@ _Hyperparameter optimization progress over 50 trials. Best Test R² of 0.501 ach
 
 ---
 
-## 2. 🔧 Compressor - Multi-Task Prediction
+## 2. Compressor - Multi-Task Prediction
 
 ### Three Models Analysis
 
@@ -265,7 +267,7 @@ _Top features for all 3 tasks: (1) Efficiency - inlet_temp, discharge_pressure; 
 
 ---
 
-## 3. 🛢️ Pipeline - Corrosion Risk Classification
+## 3. Pipeline - Corrosion Risk Classification
 
 ### Model Selection Process
 
@@ -332,7 +334,7 @@ _Top 3 features: (1) age_severity - pipeline age with degradation factor, (2) th
 
 ---
 
-## 4. ⚙️ Bearing - Anomaly Detection
+## 4. Bearing - Anomaly Detection
 
 ### Upgrade from Rule-Based to ML
 
@@ -345,7 +347,7 @@ _Top 3 features: (1) age_severity - pipeline age with degradation factor, (2) th
   - Fixed thresholds don't adapt
   - High false alarm rate
 
-**New Approach: Isolation Forest** ✅
+**New Approach: Isolation Forest**
 
 **Why Isolation Forest:**
 
@@ -399,7 +401,7 @@ _Top vibration features: RMS (0.25), Kurtosis (0.22), Peak-to-Peak (0.18). Time-
 
 ---
 
-## 5. 💧 Pump - Health Prediction
+## 5. Pump - Health Prediction
 
 ### Upgrade from Rule-Based to ML
 
@@ -412,7 +414,7 @@ _Top vibration features: RMS (0.25), Kurtosis (0.22), Peak-to-Peak (0.18). Time-
   - No sensor interaction modeling
   - Moderate false alarm rate
 
-**New Approach: Isolation Forest** ✅
+**New Approach: Isolation Forest**
 
 **Why Isolation Forest:**
 
@@ -466,7 +468,7 @@ _Left: Anomaly rate reduced 50% (28.3% → 14%). Right: False positives dropped 
 
 ---
 
-## 🎯 Overall Strategy & Lessons Learned
+## Overall Strategy & Lessons Learned
 
 ### Strategic Approach
 
@@ -507,7 +509,7 @@ _Left: Anomaly rate reduced 50% (28.3% → 14%). Right: False positives dropped 
 
 ---
 
-## 📈 Performance Comparison Table
+## Performance Comparison Table
 
 ### Before vs After Optimization
 
@@ -525,24 +527,24 @@ _Left: Anomaly rate reduced 50% (28.3% → 14%). Right: False positives dropped 
 
 **Summary:**
 
-- 🟢 **3 models improved** (Compressor RUL, Bearing, Pump)
-- 🔵 **4 models kept optimal** (Turbine, Compressor Eff/Anom, Pipeline)
-- ⏱️ **Time saved:** ~4 hours (by not over-optimizing)
-- 🎯 **Result:** Balanced system with best ROI
+- **3 models improved** (Compressor RUL, Bearing, Pump)
+- **4 models kept optimal** (Turbine, Compressor Eff/Anom, Pipeline)
+- **Time saved:** ~4 hours (by not over-optimizing)
+- **Result:** Balanced system with best ROI
 
 ---
 
-## 🔧 Model Algorithm Choices - Summary
+## Model Algorithm Choices - Summary
 
 ### Why LightGBM for Most Models?
 
 **LightGBM chosen for 5 out of 7 models:**
 
-1. Turbine RUL ✅
-2. Compressor Efficiency ✅
+1. Turbine RUL
+2. Compressor Efficiency
 3. Compressor RUL (optimized)
-4. Compressor Anomaly ✅
-5. Pipeline Risk ✅
+4. Compressor Anomaly
+5. Pipeline Risk
 
 **Reasons:**
 
@@ -557,8 +559,8 @@ _Left: Anomaly rate reduced 50% (28.3% → 14%). Right: False positives dropped 
 
 **Isolation Forest chosen for 2 models:**
 
-1. Bearing Anomaly ✅
-2. Pump Health ✅
+1. Bearing Anomaly
+2. Pump Health
 
 **Reasons:**
 
@@ -578,7 +580,7 @@ _Left: Anomaly rate reduced 50% (28.3% → 14%). Right: False positives dropped 
 
 ---
 
-## 💡 Key Takeaways
+## Key Takeaways
 
 ### For BA2 Demo
 
@@ -605,7 +607,7 @@ _Left: Anomaly rate reduced 50% (28.3% → 14%). Right: False positives dropped 
 
 ---
 
-## 📁 Related Files
+## Related Files
 
 ### Notebooks with Model Selection Sections
 
@@ -615,9 +617,9 @@ _Left: Anomaly rate reduced 50% (28.3% → 14%). Right: False positives dropped 
 
 ### Documentation
 
-- `MODEL_SELECTION_STRATEGY.md` - Detailed analysis and decision framework
-- `ARCHITECTURE.md` - Overall system design
-- `PROJECT_STRUCTURE.md` - File organization
+- `README.md` - Complete system documentation with architecture
+- `model_evaluation.md` - This document (detailed evaluation results)
+- `models/evaluation_plots/model_plots.md` - Visualization assets reference
 
 ### Model Files
 
@@ -629,7 +631,7 @@ _Left: Anomaly rate reduced 50% (28.3% → 14%). Right: False positives dropped 
 
 ---
 
-## 🚀 Future Improvements
+## Future Improvements
 
 ### If More Time Available
 
@@ -657,11 +659,11 @@ _Left: Anomaly rate reduced 50% (28.3% → 14%). Right: False positives dropped 
 
 **Final Model Selection Results:**
 
-- 🟢 **7 models analyzed**
-- 🟢 **3 models improved** (Compressor RUL, Bearing, Pump)
-- 🔵 **4 models kept optimal** (Turbine, Compressor Eff/Anom, Pipeline)
-- ⏱️ **Efficient time use** (~3 hours for meaningful improvements)
-- 🎯 **Production-ready** (all models validated and justified)
+- **7 models analyzed**
+- **3 models improved** (Compressor RUL, Bearing, Pump)
+- **4 models kept optimal** (Turbine, Compressor Eff/Anom, Pipeline)
+- **Efficient time use** (~3 hours for meaningful improvements)
+- **Production-ready** (all models validated and justified)
 
 **This strategic approach demonstrates:**
 
@@ -670,10 +672,10 @@ _Left: Anomaly rate reduced 50% (28.3% → 14%). Right: False positives dropped 
 - ROI awareness (effort vs. reward)
 - Production mindset (stable + improvements)
 
-**Result:** A balanced, well-justified multi-equipment predictive maintenance system ready for demo and production deployment. ✅
+**Result:** A balanced, well-justified multi-equipment predictive maintenance system ready for demo and production deployment.
 
 ---
 
 **Document Version:** 1.0  
 **Last Updated:** November 18, 2025  
-**Author:** BA2 Project Team
+**Author:** Vi Cham

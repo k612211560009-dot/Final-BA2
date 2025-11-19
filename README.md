@@ -155,16 +155,16 @@ _Complete end-to-end pipeline from data ingestion to web dashboard deployment_
 │  │ • Generate feature importance plots & CSV            │     │
 │  │ • Export: models/metrics/{equipment}/shap_*.csv      │     │
 │  └──────────────────────────────────────────────────────┘     │
-│  ┌──────────────────────────────────────────────────────┐     │
+│  ┌────────────────────────────────────────────────────────┐     │
 │  │ Step 4: Output Generation                            │     │
-│  │ • predictions/{equipment}_predictions.csv            │     │
+│  │ • models/predictions/{equipment}_predictions.csv     │     │
 │  │   - Equipment ID, Predicted Value, Risk Level        │     │
 │  │   - Confidence Interval, SHAP Top Features           │     │
 │  │ • critical_{equipment}_YYYYMMDD.csv                  │     │
 │  │   - Filtered by thresholds (only critical items)     │     │
 │  │ • prediction_summary.csv (cross-equipment aggregate) │     │
 │  │ • Performance metrics (JSON): RMSE, R², F1, Accuracy │     │
-│  └──────────────────────────────────────────────────────┘     │
+│  └────────────────────────────────────────────────────────┘     │
 │  ┌──────────────────────────────────────────────────────┐     │
 │  │ Step 5: Maintenance Prioritization                   │     │
 │  │ • Sort by urgency: Days to failure (ascending)       │     │
@@ -213,14 +213,15 @@ _Complete end-to-end pipeline from data ingestion to web dashboard deployment_
 │   │   └── pump/
 │   ├── metrics/                        # JSON metrics & SHAP CSVs
 │   └── evaluation_plots/               # Performance plots
-├── predictions/                        # Model outputs
-│   ├── turbine_predictions.csv
-│   ├── compressor_predictions.csv
-│   ├── pipeline_predictions.csv
-│   ├── bearing_predictions.csv
-│   ├── pump_predictions.csv
-│   ├── critical_turbines_20251119.csv
-│   └── prediction_summary.csv
+├── models/
+│   ├── predictions/                    # Model outputs
+│   │   ├── turbine_predictions.csv
+│   │   ├── compressor_predictions.csv
+│   │   ├── pipeline_predictions.csv
+│   │   ├── bearing_predictions.csv
+│   │   ├── pump_predictions.csv
+│   │   ├── critical_turbines_20251119.csv
+│   │   └── prediction_summary.csv
 ├── converted_data/                     # Processed datasets
 │   ├── extracted/                      # Raw data extraction
 │   └── processed/                      # Feature-engineered CSVs
@@ -232,9 +233,7 @@ _Complete end-to-end pipeline from data ingestion to web dashboard deployment_
 ├── RUN_ALL_PIPELINES.py                # One-command automation
 ├── generate_predictions.py             # Batch prediction script
 ├── organize_models.py                  # Model artifact organizer
-├── MODEL_SELECTION_RESULTS.md          # Detailed model comparison report
-├── PROJECT_COMPLETION_REPORT.md        # Executive summary
-├── SHAP_INTEGRATION_REPORT.md          # Feature importance analysis
+├── model_evaluation.md                 # Detailed model comparison report
 └── README.md                           # This file
 ```
 
@@ -323,7 +322,7 @@ python RUN_ALL_PIPELINES.py
 
 ### Model Selection Process
 
-See [MODEL_SELECTION_RESULTS.md](./MODEL_SELECTION_RESULTS.md) for detailed comparison.
+See [model_evaluation.md](./model_evaluation.md) for detailed comparison.
 
 #### Turbine RUL - XGBoost (Optuna-tuned)
 
@@ -552,16 +551,16 @@ python RUN_ALL_PIPELINES.py
 #### 2. Generate Predictions
 
 ```bash
-python generate_predictions.py
+python models/predictions/generate_predictions.py
 ```
 
 **Output:**
 
-- `predictions/turbine_predictions.csv`
-- `predictions/compressor_predictions.csv`
-- `predictions/pipeline_predictions.csv`
-- `predictions/critical_turbines_20251119.csv`
-- `predictions/prediction_summary.csv`
+- `models/predictions/turbine_predictions.csv`
+- `models/predictions/compressor_predictions.csv`
+- `models/predictions/pipeline_predictions.csv`
+- `models/predictions/critical_turbines_20251119.csv`
+- `models/predictions/prediction_summary.csv`
 
 #### 3. Launch Dashboard
 
@@ -643,7 +642,7 @@ jupyter notebook models/notebooks/
 ### Dashboard Data Flow
 
 ```
-predictions/*.csv → load_data.py → data.js → web.htm (JavaScript rendering)
+models/predictions/*.csv → load_data.py → data.js → web.htm (JavaScript rendering)
 ```
 
 **Update Process:**
@@ -658,11 +657,9 @@ predictions/*.csv → load_data.py → data.js → web.htm (JavaScript rendering
 
 ### Additional Resources
 
-- [MODEL_SELECTION_RESULTS.md](./MODEL_SELECTION_RESULTS.md) - Detailed model comparison & tuning
-- [SHAP_INTEGRATION_REPORT.md](./SHAP_INTEGRATION_REPORT.md) - Feature importance analysis
-- [PROJECT_COMPLETION_REPORT.md](./PROJECT_COMPLETION_REPORT.md) - Executive summary
-- [SYSTEM_SUMMARY.md](./SYSTEM_SUMMARY.md) - System architecture details
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - Technical architecture diagram
+- [model_evaluation.md](./model_evaluation.md) - Detailed model comparison & tuning results
+- [MVP/Web_tinh/system_summary.md](./MVP/Web_tinh/system_summary.md) - System architecture details
+- [models/evaluation_plots/model_plots.md](./models/evaluation_plots/model_plots.md) - Visualization quick reference
 
 ### Model Artifacts Organization
 

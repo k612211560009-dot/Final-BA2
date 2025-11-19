@@ -33,7 +33,7 @@ def copy_and_consolidate_data():
                 train_dfs.append(df)
             combined_train = pd.concat(train_dfs, ignore_index=True)
             combined_train.to_csv(PROCESSED_DIR / "turbine_train_data.csv", index=False)
-            print(f"   ✓ Created turbine_train_data.csv ({len(combined_train)} rows)")
+            print(f"Created turbine_train_data.csv ({len(combined_train)} rows)")
         
         # Combine all test files
         test_files = sorted(cmaps_dir.glob("test_FD*.csv"))
@@ -45,7 +45,7 @@ def copy_and_consolidate_data():
                 test_dfs.append(df)
             combined_test = pd.concat(test_dfs, ignore_index=True)
             combined_test.to_csv(PROCESSED_DIR / "turbine_test_data.csv", index=False)
-            print(f"   ✓ Created turbine_test_data.csv ({len(combined_test)} rows)")
+            print(f"Created turbine_test_data.csv ({len(combined_test)} rows)")
         
         # Combine RUL files
         rul_files = sorted(cmaps_dir.glob("RUL_FD*.csv"))
@@ -57,7 +57,7 @@ def copy_and_consolidate_data():
                 rul_dfs.append(df)
             combined_rul = pd.concat(rul_dfs, ignore_index=True)
             combined_rul.to_csv(PROCESSED_DIR / "turbine_rul_data.csv", index=False)
-            print(f"   ✓ Created turbine_rul_data.csv ({len(combined_rul)} rows)")
+            print(f"Created turbine_rul_data.csv ({len(combined_rul)} rows)")
     
     # 2. Process CWRU data (Bearing)
     print("\n2. Processing CWRU (Bearing) data...")
@@ -76,7 +76,7 @@ def copy_and_consolidate_data():
                 bearing_dfs.append(df)
             combined_bearing = pd.concat(bearing_dfs, ignore_index=True)
             combined_bearing.to_csv(PROCESSED_DIR / "bearing_features_all.csv", index=False)
-            print(f"   ✓ Created bearing_features_all.csv ({len(combined_bearing)} rows)")
+            print(f"Created bearing_features_all.csv ({len(combined_bearing)} rows)")
     
     # 3. Process CWRU2 data (Bearing + Gearbox)
     print("\n3. Processing CWRU2 (Bearing+Gearbox) data...")
@@ -88,7 +88,7 @@ def copy_and_consolidate_data():
                 # Copy feature_time file directly
                 if "feature_time" in f.name:
                     shutil.copy(f, PROCESSED_DIR / "bearing_gearbox_features.csv")
-                    print(f"   ✓ Created bearing_gearbox_features.csv")
+                    print(f"Created bearing_gearbox_features.csv")
                 else:
                     df = pd.read_csv(f)
                     if len(df) > 0:
@@ -96,7 +96,7 @@ def copy_and_consolidate_data():
                         df['source_file'] = f.stem
                         output_name = f"bearing_gearbox_{f.stem}.csv"
                         df.to_csv(PROCESSED_DIR / output_name, index=False)
-                        print(f"   ✓ Created {output_name} ({len(df)} rows)")
+                        print(f"Created {output_name} ({len(df)} rows)")
     
     # 4. Process Pumps data
     print("\n4. Processing Pumps data...")
@@ -106,19 +106,19 @@ def copy_and_consolidate_data():
         if pumps_file.exists():
             df = pd.read_csv(pumps_file)
             df.to_csv(PROCESSED_DIR / "pumps_data_clean.csv", index=False)
-            print(f"   ✓ Created pumps_data_clean.csv ({len(df)} rows)")
+            print(f"Created pumps_data_clean.csv ({len(df)} rows)")
     
     # 5. Compressor data - NOT included in processed
     print("\n5. Compressor data...")
     compressor_file = EXTRACTED_DIR / "compressor" / "equipment_predictive_maintenance_dataset.csv"
     if compressor_file.exists():
         file_size_mb = compressor_file.stat().st_size / (1024 * 1024)
-        print(f"   ℹ Compressor raw data: {file_size_mb:.2f} MB (~700K rows)")
-        print(f"   ⚠ NOT copied to processed/ - pipelines use raw data directly")
+        print(f" Compressor raw data: {file_size_mb:.2f} MB (~700K rows)")
+        print(f" NOT copied to processed/ - pipelines use raw data directly")
         print(f"   → Reason: Full data needed for realistic modeling")
         print(f"   → Location: raw_data/equipment_predictive_maintenance_dataset.csv")
     else:
-        print(f"   ⚠ Compressor data not found at {compressor_file}")
+        print(f" Compressor data not found at {compressor_file}")
     
     print("\n" + "="*60)
     print("Data consolidation completed!")
