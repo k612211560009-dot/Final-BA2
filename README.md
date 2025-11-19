@@ -4,7 +4,7 @@ An end-to-end machine learning pipeline for predictive maintenance across 5 equi
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 1. [Project Overview](#project-overview)
 2. [System Architecture](#system-architecture)
@@ -33,11 +33,11 @@ This project implements a comprehensive predictive maintenance platform monitori
 
 ### Key Features
 
-- ✅ **Multi-Task Modeling**: RUL prediction, anomaly detection, risk classification, efficiency monitoring
-- ✅ **Automated Pipelines**: One-command execution (`RUN_ALL_PIPELINES.py`)
-- ✅ **Model Explainability**: SHAP values for all models
-- ✅ **Interactive Dashboard**: Real-time equipment health monitoring
-- ✅ **Production-Ready**: Saved models, metrics, predictions, and maintenance schedules
+- **Multi-Task Modeling**: RUL prediction, anomaly detection, risk classification, efficiency monitoring
+- **Automated Pipelines**: One-command execution (`RUN_ALL_PIPELINES.py`)
+- **Model Explainability**: SHAP values for all models
+- **Interactive Dashboard**: Real-time equipment health monitoring
+- **Production-Ready**: Saved models, metrics, predictions, and maintenance schedules
 
 ---
 
@@ -199,7 +199,7 @@ _Complete end-to-end pipeline from data ingestion to web dashboard deployment_
 │   ├── pump_pipeline.py                # Efficiency & seal condition analysis
 │   └── dashboard_aggregator.py         # Cross-equipment summary generation
 ├── models/                             # Trained models & evaluation
-│   ├── notebooks/
+│   ├── notebooks/                      # Jupyter notebooks for modeling
 │   │   ├── Turbine_RUL_Modeling.ipynb
 │   │   ├── Compressor_Modeling.ipynb
 │   │   ├── Pipeline_Corrosion_Modeling.ipynb
@@ -211,9 +211,6 @@ _Complete end-to-end pipeline from data ingestion to web dashboard deployment_
 │   │   ├── pipeline/
 │   │   ├── bearing/
 │   │   └── pump/
-│   ├── metrics/                        # JSON metrics & SHAP CSVs
-│   └── evaluation_plots/               # Performance plots
-├── models/
 │   ├── predictions/                    # Model outputs
 │   │   ├── turbine_predictions.csv
 │   │   ├── compressor_predictions.csv
@@ -222,18 +219,34 @@ _Complete end-to-end pipeline from data ingestion to web dashboard deployment_
 │   │   ├── pump_predictions.csv
 │   │   ├── critical_turbines_20251119.csv
 │   │   └── prediction_summary.csv
+│   ├── metrics/                        # JSON metrics & SHAP CSVs
+│   ├── evaluation_plots/               # Performance visualization plots
+│   └── features/                       # Feature CSVs for each equipment
 ├── converted_data/                     # Processed datasets
-│   ├── extracted/                      # Raw data extraction
+│   ├── scripts/                        # Data conversion scripts
+│   ├── extracted/                      # Raw data extraction outputs
 │   └── processed/                      # Feature-engineered CSVs
-├── MVP/Web_tinh/                       # Dashboard frontend
-│   ├── web.htm                         # Main dashboard interface
-│   ├── data.js                         # Real-time equipment data
-│   ├── script.js                       # Interactivity & filtering
-│   └── style.css                       # Professional UI styling
-├── RUN_ALL_PIPELINES.py                # One-command automation
-├── generate_predictions.py             # Batch prediction script
-├── organize_models.py                  # Model artifact organizer
+├── EDA_notebooks/                      # Exploratory Data Analysis
+│   ├── Multi_Equipment_EDA.ipynb       # Comprehensive EDA notebook
+│   └── run_multi_equipment_eda.py      # EDA execution script
+├── MVP/                                # Web dashboard implementations
+│   ├── Web_tinh/                       # Main dashboard
+│   │   ├── web.htm                     # Dashboard interface
+│   │   ├── data.js                     # Equipment data
+│   │   ├── script.js                   # Interactivity logic
+│   │   ├── style.css                   # Dashboard styling
+│   │   ├── load_data.py                # Data loader script
+│   │   └── system_summary.md           # System documentation
+│   └── responsive/                     # Responsive dashboard version
+├── supplement_data/                    # Additional data & metadata
+│   ├── dashboard/                      # Dashboard aggregated data
+│   └── metadata/                       # Equipment metadata files
+├── raw_data/                           # Original datasets
+├── image/                              # Architecture diagrams
+│   └── Demo_Modeling_Pipeline_BA2.jpg
+├── RUN_ALL_PIPELINES.py                # One-command pipeline execution
 ├── model_evaluation.md                 # Detailed model comparison report
+├── requirements.txt                    # Python dependencies
 └── README.md                           # This file
 ```
 
@@ -243,7 +256,7 @@ _Complete end-to-end pipeline from data ingestion to web dashboard deployment_
 
 ### 1. Data Ingestion & Conversion
 
-**Scripts:** `scripts/` directory
+**Scripts:** `converted_data/scripts/` directory
 
 - `convert_cmaps_rul_to_csv.py` - C-MAPSS turbofan data (4 FD datasets)
 - `convert_cwru_mat_to_csv.py` - CWRU bearing vibration (MATLAB format)
@@ -251,6 +264,7 @@ _Complete end-to-end pipeline from data ingestion to web dashboard deployment_
 - `convert_pipeline_corrosion_csv.py` - Market pipeline thickness loss
 - `convert_pumps_xlsx.py` - Pump performance Excel files
 - `convert_vibration_csv_clean.py` - Vibration dataset cleaning
+- `run_all_converters.py` - Execute all conversion scripts
 
 **Output:** `converted_data/extracted/` - Raw CSVs
 
@@ -268,7 +282,7 @@ Each pipeline implements domain-specific feature engineering:
   - Degradation: Cycle-normalized health index
   - Sensor aggregations: Mean, min, max across 21 sensors
   - Interaction features: Temperature × Pressure
-- **Output**: `turbine_features.csv` (27 features)
+- **Output**: `models/features/turbine_features.csv` (27 features)
 
 #### Compressor Pipeline (`compressor_pipeline.py`)
 
@@ -280,7 +294,7 @@ Each pipeline implements domain-specific feature engineering:
   - Temperature: Mean, rolling std, temperature_c
   - Seal condition: Health indicator score
   - Rolling features: 7-day, 30-day windows
-- **Output**: `compressor_features.csv` (38 features)
+- **Output**: `models/features/compressor_features.csv` (38 features)
 
 #### Pipeline Corrosion (`corrosion_pipeline.py`)
 
@@ -291,7 +305,7 @@ Each pipeline implements domain-specific feature engineering:
   - Pressure-thickness ratio: Risk indicator
   - Remaining life: Years to failure
   - Age severity: Normalized equipment age
-- **Output**: `corrosion_features.csv` (25 features)
+- **Output**: `models/features/corrosion_features.csv` (25 features)
 
 #### Bearing & Pump Pipelines
 
@@ -330,7 +344,7 @@ See [model_evaluation.md](./model_evaluation.md) for detailed comparison.
 
 **Solution:**
 
-1. Tested Linear Regression (baseline): Test R²=0.564 ✅ Best performance
+1. Tested Linear Regression (baseline): Test R²=0.564 Best performance
 2. Tested LightGBM with Optuna (50 trials): Test R²=0.456
 3. **Selected XGBoost with Optuna (50 trials)**: Test R²=0.501, Overfitting=25%
 
@@ -355,7 +369,7 @@ See [model_evaluation.md](./model_evaluation.md) for detailed comparison.
 }
 ```
 
-**Saved Model:** `models/models/turbine/xgb_turbine_rul_20251119_060822.json`
+**Saved Model:** `models/saved_models/turbine/xgb_turbine_rul_20251119_060822.json`
 
 #### Compressor RUL - LightGBM (XGBoost tested but inferior)
 
@@ -367,7 +381,7 @@ See [model_evaluation.md](./model_evaluation.md) for detailed comparison.
 | Default params | LightGBM (current)  | **0.376** | **3247**         | 6.0%        |
 | Optuna tuned   | XGBoost (30 trials) | 0.355     | 3308             | 0.5%        |
 
-**Decision:** ✅ Keep LightGBM
+**Decision:** Keep LightGBM
 
 **Rationale:**
 
@@ -707,14 +721,11 @@ models/
 
 ## Contact & Support
 
-**Project Lead:** [Your Name]  
-**Documentation:** This README + 5 technical reports  
+**Project Lead:** Vi Cham  
+**Repository:** https://github.com/k612211560009-dot/Final-BA2  
+**Documentation:** This README + model evaluation + system summary  
 **Last Updated:** November 19, 2025
-
-For questions, issues, or contributions, please refer to the GitHub repository issues page or contact the project maintainers.
 
 ---
 
 ## License
-
-[Specify License Here]
