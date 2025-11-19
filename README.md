@@ -43,6 +43,11 @@ This project implements a comprehensive predictive maintenance platform monitori
 
 ## System Architecture
 
+![Multi-Equipment Predictive Maintenance Architecture](image/Demo_Modeling_Pipeline_BA2.jpg)
+_Complete end-to-end pipeline from data ingestion to web dashboard deployment_
+
+### Architecture Flow Diagram
+
 ```
 ┌────────────────────────────────────────────────────────────────┐
 │                      RAW DATA SOURCES                          │
@@ -78,37 +83,95 @@ This project implements a comprehensive predictive maintenance platform monitori
                    │
                    ▼
 ┌────────────────────────────────────────────────────────────────┐
-│              MACHINE LEARNING MODELS                           │
+│              MACHINE LEARNING MODELS & THRESHOLDS              │
 │  ┌────────────────────────────────────────────────────────┐   │
 │  │ TURBINE: XGBoost (Optuna-tuned, R²=0.501)             │   │
-│  │ • Task: RUL Prediction                                 │   │
+│  │ • Task: RUL Prediction (Remaining Useful Life)         │   │
 │  │ • Model: xgb_turbine_rul_20251119_060822.json         │   │
+│  │ • Critical Threshold: RUL < 30 cycles                  │   │
+│  │ • Warning Threshold: RUL < 50 cycles                   │   │
+│  │ • SHAP Top Features:                                   │   │
+│  │   - sensor_14 (HP compressor temp, 23.4%)             │   │
+│  │   - sensor_11 (LP turbine temp, 18.9%)                │   │
+│  │   - cycle_norm (degradation indicator, 15.6%)         │   │
 │  └────────────────────────────────────────────────────────┘   │
 │  ┌────────────────────────────────────────────────────────┐   │
 │  │ COMPRESSOR: LightGBM (3 models)                        │   │
-│  │ • Efficiency Degradation (R²=0.82)                     │   │
-│  │ • RUL Prediction (R²=0.376, tested vs XGBoost)        │   │
-│  │ • Anomaly Detection (F1=0.91)                          │   │
+│  │ • Model 1: Efficiency Degradation (R²=0.82)            │   │
+│  │   - Threshold: Efficiency < 85% → Maintenance          │   │
+│  │   - SHAP: efficiency_proxy (20%), pressure_ratio (2.5%)│   │
+│  │ • Model 2: RUL Prediction (R²=0.376, RMSE=3247 days)   │   │
+│  │   - Critical: RUL < 180 days                           │   │
+│  │   - Warning: RUL < 365 days                            │   │
+│  │   - SHAP: vibration_trend_slope (40%), temp (20%)     │   │
+│  │ • Model 3: Anomaly Detection (F1=0.91, Acc=0.89)       │   │
+│  │   - Threshold: Anomaly score > 0.5 → Alert            │   │
+│  │   - SHAP: temperature_c (40%), vibration_rms (35%)    │   │
 │  └────────────────────────────────────────────────────────┘   │
 │  ┌────────────────────────────────────────────────────────┐   │
 │  │ PIPELINE: LightGBM Multiclass (Acc=94%, F1=0.85)      │   │
-│  │ • Task: Corrosion Risk Classification                  │   │
-│  │ • Classes: Normal / Moderate / Critical                │   │
+│  │ • Task: Corrosion Risk Classification (3 classes)      │   │
+│  │ • Classes & Actions:                                   │   │
+│  │   - Normal: Routine inspection (annual)                │   │
+│  │   - Moderate: Quarterly inspection required            │   │
+│  │   - Critical: Immediate intervention (<30 days)        │   │
+│  │ • SHAP Top Features:                                   │   │
+│  │   - age_severity (normalized age, 45%)                 │   │
+│  │   - thickness_loss_mm (corrosion depth, 40%)           │   │
+│  │   - safety_margin_percent (remaining thickness, 15%)   │   │
 │  └────────────────────────────────────────────────────────┘   │
 │  ┌────────────────────────────────────────────────────────┐   │
-│  │ BEARING: Isolation Forest (Anomaly: 46% → 18%)        │   │
-│  │ PUMP: Isolation Forest (Anomaly: 28% → 14%)           │   │
+│  │ BEARING: Isolation Forest (Contamination=0.18)         │   │
+│  │ • Anomaly Reduction: 46% → 18% (FFT-based filtering)   │   │
+│  │ • Threshold: Anomaly score < -0.2 → Defect detected   │   │
+│  │ • SHAP: FFT_band_3 (bearing freq, 30%), kurtosis (25%)│   │
+│  │ PUMP: Isolation Forest (Contamination=0.14)            │   │
+│  │ • Anomaly Reduction: 28% → 14% (seal health scoring)   │   │
+│  │ • Threshold: Health score < 70 → Seal replacement      │   │
+│  │ • SHAP: seal_temp (35%), vibration_rms (30%)          │   │
 │  └────────────────────────────────────────────────────────┘   │
 └──────────────────┬─────────────────────────────────────────────┘
                    │
                    ▼
 ┌────────────────────────────────────────────────────────────────┐
-│                  PREDICTIONS & OUTPUTS                         │
-│  • RUL predictions with confidence intervals                  │
-│  • Critical equipment lists (maintenance priority)            │
-│  • Maintenance schedules (sorted by urgency)                  │
-│  • SHAP explainability plots & CSV                            │
-│  • Performance metrics (JSON)                                 │
+│            PREDICTIONS & OUTPUTS WORKFLOW                      │
+│  ┌──────────────────────────────────────────────────────┐     │
+│  │ Step 1: Model Inference                              │     │
+│  │ • Load trained models from saved_models/             │     │
+│  │ • Process features through pipeline transforms       │     │
+│  │ • Generate predictions with uncertainty estimates    │     │
+│  └──────────────────────────────────────────────────────┘     │
+│  ┌──────────────────────────────────────────────────────┐     │
+│  │ Step 2: Threshold-Based Classification               │     │
+│  │ • Turbine: RUL < 30 → Critical, RUL < 50 → Warning   │     │
+│  │ • Compressor: Efficiency < 85% OR RUL < 180 → Action│     │
+│  │ • Pipeline: Risk class from model output             │     │
+│  │ • Bearing/Pump: Anomaly score thresholding           │     │
+│  └──────────────────────────────────────────────────────┘     │
+│  ┌──────────────────────────────────────────────────────┐     │
+│  │ Step 3: SHAP Explainability                          │     │
+│  │ • Calculate SHAP values for each prediction          │     │
+│  │ • Identify top 3-5 contributing features             │     │
+│  │ • Generate feature importance plots & CSV            │     │
+│  │ • Export: models/metrics/{equipment}/shap_*.csv      │     │
+│  └──────────────────────────────────────────────────────┘     │
+│  ┌──────────────────────────────────────────────────────┐     │
+│  │ Step 4: Output Generation                            │     │
+│  │ • predictions/{equipment}_predictions.csv            │     │
+│  │   - Equipment ID, Predicted Value, Risk Level        │     │
+│  │   - Confidence Interval, SHAP Top Features           │     │
+│  │ • critical_{equipment}_YYYYMMDD.csv                  │     │
+│  │   - Filtered by thresholds (only critical items)     │     │
+│  │ • prediction_summary.csv (cross-equipment aggregate) │     │
+│  │ • Performance metrics (JSON): RMSE, R², F1, Accuracy │     │
+│  └──────────────────────────────────────────────────────┘     │
+│  ┌──────────────────────────────────────────────────────┐     │
+│  │ Step 5: Maintenance Prioritization                   │     │
+│  │ • Sort by urgency: Days to failure (ascending)       │     │
+│  │ • Assign priority: Critical (1-30 days) > High >     │     │
+│  │   Medium > Low                                       │     │
+│  │ • Generate maintenance_schedule.csv with dates       │     │
+│  └──────────────────────────────────────────────────────┘     │
 └──────────────────┬─────────────────────────────────────────────┘
                    │
                    ▼
@@ -299,11 +362,11 @@ See [MODEL_SELECTION_RESULTS.md](./MODEL_SELECTION_RESULTS.md) for detailed comp
 
 **Testing XGBoost (Nov 19, 2025):**
 
-| Test Type        | Algorithm              | Test R²  | Test RMSE (days) | Overfitting |
-| ---------------- | ---------------------- | -------- | ---------------- | ----------- |
-| Default params   | XGBoost                | 0.372    | 3258             | 2.5%        |
-| Default params   | LightGBM (current)     | **0.376**| **3247**         | 6.0%        |
-| Optuna tuned     | XGBoost (30 trials)    | 0.355    | 3308             | 0.5%        |
+| Test Type      | Algorithm           | Test R²   | Test RMSE (days) | Overfitting |
+| -------------- | ------------------- | --------- | ---------------- | ----------- |
+| Default params | XGBoost             | 0.372     | 3258             | 2.5%        |
+| Default params | LightGBM (current)  | **0.376** | **3247**         | 6.0%        |
+| Optuna tuned   | XGBoost (30 trials) | 0.355     | 3308             | 0.5%        |
 
 **Decision:** ✅ Keep LightGBM
 
@@ -341,19 +404,49 @@ See [MODEL_SELECTION_RESULTS.md](./MODEL_SELECTION_RESULTS.md) for detailed comp
 
 ## Feature Importance Analysis
 
-### SHAP (SHapley Additive exPlanations)
+### SHAP (SHapley Additive exPlanations) Integration
+
+**Purpose:** Explain **why** each model made specific predictions by quantifying individual feature contributions.
+
+**Method:**
+
+- **TreeExplainer** for XGBoost/LightGBM models (fast, exact)
+- **KernelExplainer** for Isolation Forest (model-agnostic)
+- Calculate SHAP values for each prediction: `prediction = base_value + sum(SHAP_values)`
+
+**Interpretation Guidelines:**
+
+- **Positive SHAP value** → Feature increases predicted risk/RUL
+- **Negative SHAP value** → Feature decreases predicted risk/RUL
+- **Magnitude** → Impact strength (larger = more influential)
+
+**Thresholds for Actionable Insights:**
+
+- SHAP importance > 0.15 (15%) → **Primary driver** (requires immediate attention)
+- SHAP importance 0.05-0.15 → **Secondary factor** (monitor closely)
+- SHAP importance < 0.05 → **Minor contributor** (routine monitoring)
+
+**Outputs:**
+
+- `models/metrics/{equipment}/shap_importance.csv` - Feature rankings
+- `models/metrics/{equipment}/{equipment}_shap_combined.png` - Visualization
+- Top 3-5 features exported to prediction CSV for operator use
+
+---
+
+### Equipment-Specific SHAP Analysis
 
 All models include SHAP analysis for explainability:
 
 #### Turbine RUL - Top 5 Features
 
-| Feature          | SHAP Importance | Interpretation                            |
-| ---------------- | --------------- | ----------------------------------------- |
-| sensor_14        | 0.234           | High-pressure compressor temperature      |
-| sensor_11        | 0.189           | Low-pressure turbine temperature          |
-| cycle_norm       | 0.156           | Normalized operational cycles             |
-| sensor_4         | 0.143           | Combustion chamber temperature            |
-| sensor_15        | 0.128           | Total temperature at turbine inlet        |
+| Feature    | SHAP Importance | Interpretation                       |
+| ---------- | --------------- | ------------------------------------ |
+| sensor_14  | 0.234           | High-pressure compressor temperature |
+| sensor_11  | 0.189           | Low-pressure turbine temperature     |
+| cycle_norm | 0.156           | Normalized operational cycles        |
+| sensor_4   | 0.143           | Combustion chamber temperature       |
+| sensor_15  | 0.128           | Total temperature at turbine inlet   |
 
 **Insight:** Temperature sensors dominate RUL prediction, capturing degradation from thermal stress.
 
@@ -386,6 +479,42 @@ All models include SHAP analysis for explainability:
 3. `safety_margin_percent` (0.036) - Remaining thickness safety buffer
 
 **Visualization:** `models/metrics/pipeline/pipeline_shap_importance.png`
+
+#### Bearing & Pump - Isolation Forest SHAP
+
+**Bearing Top Features:**
+
+| Feature       | SHAP Importance | Threshold         | Action                        |
+| ------------- | --------------- | ----------------- | ----------------------------- |
+| FFT_band_3    | 0.300           | Amplitude > 0.5 g | Bearing outer race defect     |
+| kurtosis      | 0.250           | Kurtosis > 5.0    | Shock/impact detected         |
+| vibration_rms | 0.220           | RMS > 3.0 mm/s    | General vibration severity    |
+| crest_factor  | 0.150           | Crest > 6.0       | Impulsive fault (spalling)    |
+| peak_to_peak  | 0.080           | Peak > 10 mm/s    | Excessive amplitude variation |
+
+**Pump Top Features:**
+
+| Feature             | SHAP Importance | Threshold           | Action                        |
+| ------------------- | --------------- | ------------------- | ----------------------------- |
+| seal_temp           | 0.350           | Temp > 75°C         | Seal overheating → replace    |
+| vibration_rms       | 0.300           | RMS > 4.5 mm/s      | Cavitation or misalignment    |
+| efficiency_proxy    | 0.200           | Efficiency < 80%    | Impeller wear or fouling      |
+| flow_rate_deviation | 0.100           | Deviation > 15%     | Blockage or leakage           |
+| power_trend_slope   | 0.050           | Slope > 0.05 kW/day | Increasing load (degradation) |
+
+**SHAP Visualization Examples:**
+
+![Compressor SHAP Analysis](models/metrics/compressor/compressor_shap_combined.png)
+_SHAP feature importance for Compressor multi-task models_
+
+![Pipeline Corrosion SHAP](models/metrics/pipeline/pipeline_shap_importance.png)
+_SHAP feature importance for Pipeline risk classification_
+
+![Bearing Feature Importance](models/metrics/bearing/bearing_feature_importance.png)
+_Top features driving bearing anomaly detection_
+
+![Pump Feature Importance](models/metrics/pump/pump_feature_importance.png)
+_Top features driving pump health scoring_
 
 ---
 
@@ -460,15 +589,15 @@ jupyter notebook models/notebooks/
 
 ## Model Performance Summary
 
-| Equipment      | Task                | Algorithm        | Test Metric          | Overfitting | Model File                                |
-| -------------- | ------------------- | ---------------- | -------------------- | ----------- | ----------------------------------------- |
-| **Turbine**    | RUL Prediction      | XGBoost (tuned)  | R²=0.501, RMSE=41.7  | 25%         | `xgb_turbine_rul_20251119_060822.json`    |
-| **Compressor** | Efficiency          | LightGBM         | R²=0.82              | Low         | `lgb_compressor_efficiency.txt`           |
-| **Compressor** | RUL                 | LightGBM         | R²=0.376, RMSE=3247  | 6%          | `lgb_compressor_rul.txt`                  |
-| **Compressor** | Anomaly             | LightGBM         | F1=0.91, Acc=0.89    | Low         | `lgb_compressor_anomaly.txt`              |
-| **Pipeline**   | Risk Classification | LightGBM         | Acc=94%, F1=0.85     | Low         | `lgb_pipeline_corrosion.txt`              |
-| **Bearing**    | Anomaly Detection   | Isolation Forest | Anomaly: 18%         | N/A         | `isolation_forest_bearing.pkl`            |
-| **Pump**       | Health Prediction   | Isolation Forest | Anomaly: 14%         | N/A         | `isolation_forest_pump.pkl`               |
+| Equipment      | Task                | Algorithm        | Test Metric         | Decision Threshold                     | Overfitting | Model File                             |
+| -------------- | ------------------- | ---------------- | ------------------- | -------------------------------------- | ----------- | -------------------------------------- |
+| **Turbine**    | RUL Prediction      | XGBoost (tuned)  | R²=0.501, RMSE=41.7 | Critical: RUL<30, Warn: <50            | 25%         | `xgb_turbine_rul_20251119_060822.json` |
+| **Compressor** | Efficiency          | LightGBM         | R²=0.82             | Efficiency < 85%                       | Low         | `lgb_compressor_efficiency.txt`        |
+| **Compressor** | RUL                 | LightGBM         | R²=0.376, RMSE=3247 | Critical: RUL<180d, Warn:<1y           | 6%          | `lgb_compressor_rul.txt`               |
+| **Compressor** | Anomaly             | LightGBM         | F1=0.91, Acc=0.89   | Anomaly score > 0.5                    | Low         | `lgb_compressor_anomaly.txt`           |
+| **Pipeline**   | Risk Classification | LightGBM         | Acc=94%, F1=0.85    | Class: Normal/Moderate/Crit            | Low         | `lgb_pipeline_corrosion.txt`           |
+| **Bearing**    | Anomaly Detection   | Isolation Forest | Anomaly: 18%        | Score < -0.2 (contamination=0.18)      | N/A         | `isolation_forest_bearing.pkl`         |
+| **Pump**       | Health Prediction   | Isolation Forest | Anomaly: 14%        | Health score < 70 (contamination=0.14) | N/A         | `isolation_forest_pump.pkl`            |
 
 ### Key Improvements
 
@@ -487,16 +616,19 @@ jupyter notebook models/notebooks/
 **Components:**
 
 1. **KPI Cards**:
+
    - Total equipment monitored: 121
    - Critical alerts: 31
    - Average health score: 78.2%
    - Risk distribution: 15% Critical, 35% Moderate, 50% Normal
 
 2. **Risk Distribution Pie Chart**:
+
    - Visual breakdown by risk level
    - Color-coded (Red=Critical, Yellow=Moderate, Green=Normal)
 
 3. **Equipment Health List**:
+
    - Filterable by:
      - Time range (7/30/90 days)
      - Equipment area (Production/Utility/Support)
@@ -580,7 +712,7 @@ models/
 
 **Project Lead:** [Your Name]  
 **Documentation:** This README + 5 technical reports  
-**Last Updated:** November 19, 2025  
+**Last Updated:** November 19, 2025
 
 For questions, issues, or contributions, please refer to the GitHub repository issues page or contact the project maintainers.
 
