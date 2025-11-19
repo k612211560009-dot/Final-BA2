@@ -117,7 +117,7 @@ def flag_anomalies(df):
 
 def process_bearing_data():
     base_dir = os.path.join(os.path.dirname(__file__), '..')
-    cwru_dir = os.path.join(base_dir, 'converted_data', 'extracted', 'cwru')
+    processed_dir = os.path.join(base_dir, 'converted_data', 'processed')
     out_dir = os.path.join(base_dir, 'data', 'features')
     ensure_dir(out_dir)
     
@@ -125,59 +125,71 @@ def process_bearing_data():
     eq_master = load_equipment_master()
     op_context = load_operational_context()
     
-    # Find all bearing feature CSVs
-    files = glob.glob(os.path.join(cwru_dir, '*_features.csv'))
-    if not files:
-        print("No bearing feature CSVs found in", cwru_dir)
-        return
+    # Load consolidated bearing features from processed data
+    bearing_file = os.path.join(processed_dir, 'bearing_features_all.csv')
+    if not os.path.exists(bearing_file):
+        print(f"Bearing processed file not found: {bearing_file}")
+        print("Falling back to extracted data...")
+        # Fallback to original logic
+        cwru_dir = os.path.join(base_dir, 'converted_data', 'extracted', 'cwru')
+        files = glob.glob(os.path.join(cwru_dir, '*_features.csv'))
+        if not files:
+            print("No bearing feature CSVs found")
+            return
+        
+        all_parts = []
+        for f in files:
+            print(f"Processing {os.path.basename(f)}...")
+            df = pd.read_csv(f)
+            subtype = map_file_to_equipment_id(f)
+            df['equipment_id'] = f"BEARING_{subtype}"
+            df['file_source'] = os.path.basename(f)
+            all_parts.append(df)
+        
+        combined = pd.concat(all_parts, ignore_index=True)
+    else:
+        print(f"Loading processed bearing data from {bearing_file}...")
+        combined = pd.read_csv(bearing_file)
+        print(f"Loaded {len(combined)} rows")
+        
+        # Map fault_type to equipment_id if not already present
+        if 'equipment_id' not in combined.columns:
+            combined['equipment_id'] = 'BEARING_' + combined['fault_type'].astype(str) + '_' + combined['load'].astype(str)
+        
+        if 'file_source' not in combined.columns:
+            combined['file_source'] = combined.get('source_file', combined['fault_type'])
     
-    all_parts = []
-    for f in files:
-        print(f"Processing {os.path.basename(f)}...")
-        df = pd.read_csv(f)
-        
-        # Map file to equipment_id
-        subtype = map_file_to_equipment_id(f)
-        eq_row = eq_master[eq_master['equipment_subtype'] == subtype]
-        if eq_row.empty:
-            # Fallback: create synthetic equipment_id
-            equipment_id = f"BEARING_{subtype}"
-        else:
-            equipment_id = eq_row.iloc[0]['equipment_id']
-        
-        df['equipment_id'] = equipment_id
-        df['file_source'] = os.path.basename(f)
-        
-        # Compute rolling features
-        df = compute_rolling_features(df, window=10)
-        
-        # Compute trend slope
-        df = compute_trend_slope(df, window=20)
-        
-        # Compute health index
-        df = compute_health_index(df)
-        
-        # Flag anomalies
-        df = flag_anomalies(df)
-        
-        # Join with operational context (if available, use first matching record)
-        if not op_context.empty:
-            ctx = op_context[op_context['equipment_id'] == equipment_id]
-            if not ctx.empty:
-                # Use mean values as proxy (real system would join on timestamp)
-                df['operating_speed_rpm'] = ctx['operating_speed_rpm'].mean()
-                df['load_percent'] = ctx['load_percent'].mean()
-            else:
-                df['operating_speed_rpm'] = np.nan
-                df['load_percent'] = np.nan
-        else:
-            df['operating_speed_rpm'] = np.nan
-            df['load_percent'] = np.nan
-        
-        all_parts.append(df)
+    # Compute rolling features if not already present
+    if 'rolling_mean_rms' not in combined.columns:
+        print("Computing rolling features...")
+        combined = compute_rolling_features(combined, window=10)
     
-    # Concatenate all
-    combined = pd.concat(all_parts, ignore_index=True)
+    # Compute trend slope if not already present  
+    if 'rms_trend_slope' not in combined.columns:
+        print("Computing trend slope...")
+        combined = compute_trend_slope(combined, window=20)
+    
+    # Compute health index if not already present
+    if 'health_index' not in combined.columns:
+        print("Computing health index...")
+        combined = compute_health_index(combined)
+    
+    # Flag anomalies if not already present
+    if 'is_anomaly' not in combined.columns:
+        print("Flagging anomalies...")
+        combined = flag_anomalies(combined)
+    
+    # Join with operational context if available
+    if not op_context.empty and 'equipment_id' in combined.columns:
+        # Merge operating context data
+        combined = combined.merge(
+            op_context[['equipment_id', 'operating_speed_rpm', 'load_percent']],
+            on='equipment_id',
+            how='left'
+        )
+    else:
+        combined['operating_speed_rpm'] = np.nan
+        combined['load_percent'] = np.nan
     
     # Reorder columns
     cols = ['equipment_id', 'file_source', 'start_sample', 'window_length',

@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "D:\Final BA2\generate_evaluation_plots.py", line 12, in <module>
+    import lightgbm as lgb
+ModuleNotFoundError: No module named 'lightgbm'

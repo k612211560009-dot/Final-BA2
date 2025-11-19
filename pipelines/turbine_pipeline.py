@@ -24,8 +24,9 @@ warnings.filterwarnings('ignore')
 # Paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 EXTRACTED_DIR = BASE_DIR / "converted_data/extracted/cmaps"
+PROCESSED_DIR = BASE_DIR / "converted_data/processed"
 FEATURES_DIR = BASE_DIR / "data/features"
-METADATA_DIR = BASE_DIR / "data/metadata"
+METADATA_DIR = BASE_DIR / "supplement_data/metadata"
 FEATURES_DIR.mkdir(parents=True, exist_ok=True)
 
 print("="*70)
@@ -37,41 +38,48 @@ print("="*70)
 print("\nLoading data...")
 
 # CMAPS sensor column names (from NASA documentation)
-# Columns: unit_id, time_cycles, operational_setting_1-3, sensor_measurement_1-26
-sensor_cols = [
-    'unit_id', 'time_cycles', 
-    'op_setting_1', 'op_setting_2', 'op_setting_3',
-    'sensor_1', 'sensor_2', 'sensor_3', 'sensor_4', 'sensor_5',
-    'sensor_6', 'sensor_7', 'sensor_8', 'sensor_9', 'sensor_10',
-    'sensor_11', 'sensor_12', 'sensor_13', 'sensor_14', 'sensor_15',
-    'sensor_16', 'sensor_17', 'sensor_18', 'sensor_19', 'sensor_20',
-    'sensor_21', 'sensor_22', 'sensor_23', 'sensor_24', 'sensor_25', 'sensor_26'
-]
-
-# Load training data (FD001 - simplest case: single operating condition, single fault mode)
-train_df = pd.read_csv(EXTRACTED_DIR / "train_FD001.csv", names=sensor_cols)
+# Load processed data (consolidated from all FD files)
+print("   Loading processed turbine data...")
+train_df = pd.read_csv(PROCESSED_DIR / "turbine_train_data.csv")
 print(f"   Training data: {train_df.shape}")
 
-# Load RUL labels for test set
-rul_df = pd.read_csv(EXTRACTED_DIR / "RUL_FD001.csv", names=['rul_actual'])
-print(f"   RUL labels: {rul_df.shape}")
-
-# Load test data
-test_df = pd.read_csv(EXTRACTED_DIR / "test_FD001.csv", names=sensor_cols)
+test_df = pd.read_csv(PROCESSED_DIR / "turbine_test_data.csv")
 print(f"   Test data: {test_df.shape}")
 
-# Combine train and test for unified feature engineering
-# For training data, calculate RUL from max_cycles
-train_df['max_cycles'] = train_df.groupby('unit_id')['time_cycles'].transform('max')
-train_df['rul_actual'] = train_df['max_cycles'] - train_df['time_cycles']
-train_df['dataset'] = 'train'
+rul_df = pd.read_csv(PROCESSED_DIR / "turbine_rul_data.csv")
+print(f"   RUL labels: {rul_df.shape}")
 
-# For test data, use provided RUL labels (last cycle RUL)
+# Filter to use only FD001 dataset (single operating condition)
+train_df = train_df[train_df['dataset'] == 'train_FD001'].copy()
+test_df = test_df[test_df['dataset'] == 'test_FD001'].copy()
+rul_df = rul_df[rul_df['dataset'] == 'RUL_FD001'].copy()
+
+print(f"   Filtered to FD001: train={train_df.shape}, test={test_df.shape}")
+
+# Rename columns if needed (processed data has numeric column names from CSV)
+if '0' in str(train_df.columns[0]):
+    # Columns: 0=unit_id, 1=time_cycles, 2-4=op_settings, 5-26=sensors (21 sensors), 'dataset'
+    col_names = ['unit_id', 'time_cycles'] + \
+                [f'op_setting_{i}' for i in range(1, 4)] + \
+                [f'sensor_{i}' for i in range(1, 22)] + ['dataset']
+    train_df.columns = col_names
+    test_df.columns = col_names
+
+# Calculate RUL if not already present
+if 'rul_actual' not in train_df.columns:
+    train_df['max_cycles'] = train_df.groupby('unit_id')['time_cycles'].transform('max')
+    train_df['rul_actual'] = train_df['max_cycles'] - train_df['time_cycles']
+
+# Calculate max_cycles for test set as well
 test_df['max_cycles'] = test_df.groupby('unit_id')['time_cycles'].transform('max')
 
 # Get unique unit IDs from test set (sorted)
 test_units_list = sorted(test_df['unit_id'].unique())
 print(f"   Test set has {len(test_units_list)} unique units")
+
+# Rename RUL data columns if needed
+if '0' in str(rul_df.columns[0]):
+    rul_df.columns = ['rul_actual', 'dataset']
 
 # Create RUL mapping (one RUL per unit, take first N RUL values)
 rul_mapping = pd.DataFrame({

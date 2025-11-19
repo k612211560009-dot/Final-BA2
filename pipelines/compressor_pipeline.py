@@ -30,7 +30,7 @@ warnings.filterwarnings('ignore')
 BASE_DIR = Path(__file__).resolve().parent.parent
 RAW_DATA_DIR = BASE_DIR / "raw_data"
 FEATURES_DIR = BASE_DIR / "data/features"
-METADATA_DIR = BASE_DIR / "data/metadata"
+METADATA_DIR = BASE_DIR / "supplement_data/metadata"
 
 FEATURES_DIR.mkdir(parents=True, exist_ok=True)
 

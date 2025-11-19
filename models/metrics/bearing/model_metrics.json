@@ -1,0 +1,14 @@
+{
+  "model_name": "Bearing_Anomaly_Detector",
+  "algorithm": "Isolation Forest",
+  "contamination": 0.15,
+  "anomaly_rate": 0.1500167056465085,
+  "anomalies_detected": 449,
+  "total_samples": 2993,
+  "features": 7,
+  "comparison": {
+    "rule_based_rate": 0.4624122953558303,
+    "isolation_forest_rate": 0.1500167056465085,
+    "reduction": 67.5578034682081
+  }
+}

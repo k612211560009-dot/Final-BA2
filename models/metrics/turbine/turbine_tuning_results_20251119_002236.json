@@ -1,0 +1,37 @@
+{
+  "timestamp": "20251119_002236",
+  "model_type": "LightGBM_Tuned_RecommendLR",
+  "optimization_trials": 50,
+  "best_trial": 45,
+  "best_params": {
+    "objective": "regression",
+    "metric": "rmse",
+    "boosting_type": "gbdt",
+    "verbose": -1,
+    "random_state": 42,
+    "reg_alpha": 1.3390036532643042,
+    "reg_lambda": 0.11240471344323778,
+    "num_leaves": 19,
+    "max_depth": 3,
+    "min_child_samples": 20,
+    "min_data_in_leaf": 27,
+    "learning_rate": 0.0036587622884808983,
+    "n_estimators": 450,
+    "feature_fraction": 0.7474194495821016,
+    "bagging_fraction": 0.699914751429443,
+    "bagging_freq": 4
+  },
+  "train_r2": 0.7329957684119919,
+  "train_rmse": 35.591634113081625,
+  "train_mae": 27.697423108896142,
+  "test_r2": 0.45625015563327176,
+  "test_rmse": 43.48991904639485,
+  "test_mae": 33.54584223540455,
+  "overfitting_percentage": 27.674561277872012,
+  "training_time_seconds": 0.9472692012786865,
+  "improvement_vs_original": {
+    "test_r2_improvement": 0.07694364823822486,
+    "test_rmse_improvement": 2.9752608097118767,
+    "overfitting_reduction": 18.46929761864784
+  }
+}

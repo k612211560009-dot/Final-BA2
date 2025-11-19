@@ -23,7 +23,7 @@ warnings.filterwarnings('ignore')
 BASE_DIR = Path(__file__).resolve().parent.parent
 FEATURES_DIR = BASE_DIR / "data/features"
 DASHBOARD_DIR = BASE_DIR / "data/dashboard"
-METADATA_DIR = BASE_DIR / "data/metadata"
+METADATA_DIR = BASE_DIR / "supplement_data/metadata"
 DASHBOARD_DIR.mkdir(parents=True, exist_ok=True)
 
 print("="*70)

@@ -23,7 +23,7 @@ warnings.filterwarnings('ignore')
 # Paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROCESSED_DIR = BASE_DIR / "converted_data/processed"
-METADATA_DIR = BASE_DIR / "data/metadata"
+METADATA_DIR = BASE_DIR / "supplement_data/metadata"
 FEATURES_DIR = BASE_DIR / "data/features"
 FEATURES_DIR.mkdir(parents=True, exist_ok=True)
 

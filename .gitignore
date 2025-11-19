@@ -1,7 +1,10 @@
-# Large data files
+# Large data files (>100MB) - excluded from git, use raw for pipelines
 converted_data/extracted/compressor/equipment_predictive_maintenance_dataset.csv
 subplement_data/features/compressor_features.csv
 raw_data/equipment_predictive_maintenance_dataset.csv
+
+# Note: Compressor pipelines use raw data directly (not processed)
+# Download full dataset separately if needed (~215MB, ~700K rows)
 
 # Python
 __pycache__/
@@ -50,3 +53,4 @@ Thumbs.db
 
 # Git credentials
 .git-credentials
+models/features/compressor_features.csv

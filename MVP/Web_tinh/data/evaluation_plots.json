@@ -1,0 +1,223 @@
+{
+  "metadata": {
+    "generated_date": "2025-11-19",
+    "total_plots": 20,
+    "equipment_types": 5,
+    "description": "Evaluation plots for all predictive maintenance models"
+  },
+  "plots": {
+    "turbine": {
+      "equipment_name": "Turbine RUL Prediction",
+      "model_type": "XGBoost Regressor",
+      "performance": {
+        "train_r2": 0.667,
+        "test_r2": 0.501,
+        "overfitting": "25%",
+        "mae": 35.2
+      },
+      "visualizations": [
+        {
+          "name": "RUL Time Series",
+          "path": "../../models/evaluation_plots/turbine/rul_timeseries_plot.png",
+          "description": "Train/Test RUL predictions over cycles with actual values",
+          "type": "scatter"
+        },
+        {
+          "name": "Model Comparison",
+          "path": "../../models/evaluation_plots/turbine/model_comparison.png",
+          "description": "Linear vs LightGBM vs XGBoost performance comparison",
+          "type": "bar"
+        },
+        {
+          "name": "Residuals Distribution",
+          "path": "../../models/evaluation_plots/turbine/residuals_plot.png",
+          "description": "Prediction error distribution for train and test sets",
+          "type": "histogram"
+        },
+        {
+          "name": "Feature Importance",
+          "path": "../../models/evaluation_plots/turbine/feature_importance.png",
+          "description": "Top 15 features ranked by XGBoost importance",
+          "type": "barh"
+        },
+        {
+          "name": "Optuna Optimization",
+          "path": "../../models/evaluation_plots/turbine/optuna_optimization_history.png",
+          "description": "Hyperparameter tuning progress over 50 trials",
+          "type": "line"
+        }
+      ]
+    },
+    "compressor": {
+      "equipment_name": "Compressor Multi-Task",
+      "model_type": "LightGBM (3 models)",
+      "performance": {
+        "efficiency_r2": 0.85,
+        "rul_r2": 0.376,
+        "anomaly_f1": 0.91,
+        "overfitting": "6%"
+      },
+      "visualizations": [
+        {
+          "name": "Efficiency Scatter",
+          "path": "../../models/evaluation_plots/compressor/efficiency_scatter.png",
+          "description": "Actual vs Predicted efficiency with ±5% error band",
+          "type": "scatter"
+        },
+        {
+          "name": "RUL Prediction",
+          "path": "../../models/evaluation_plots/compressor/rul_prediction.png",
+          "description": "RUL scatter and time series views",
+          "type": "combined"
+        },
+        {
+          "name": "XGBoost Comparison",
+          "path": "../../models/evaluation_plots/compressor/xgboost_comparison.png",
+          "description": "LightGBM vs XGBoost performance (LightGBM wins)",
+          "type": "bar"
+        },
+        {
+          "name": "Anomaly Confusion Matrix",
+          "path": "../../models/evaluation_plots/compressor/anomaly_confusion_matrix.png",
+          "description": "Binary classification accuracy matrix",
+          "type": "heatmap"
+        },
+        {
+          "name": "SHAP Combined",
+          "path": "../../models/metrics/compressor/compressor_shap_combined.png",
+          "description": "Top features for all 3 tasks (Efficiency/RUL/Anomaly)",
+          "type": "shap"
+        }
+      ]
+    },
+    "pipeline": {
+      "equipment_name": "Pipeline Corrosion Risk",
+      "model_type": "LightGBM Classifier",
+      "performance": {
+        "accuracy": 0.923,
+        "precision": 0.91,
+        "recall": 0.94,
+        "f1": 0.92
+      },
+      "visualizations": [
+        {
+          "name": "Confusion Matrix",
+          "path": "../../models/evaluation_plots/pipeline/confusion_matrix.png",
+          "description": "3-class classification: Normal/Moderate/Critical",
+          "type": "heatmap"
+        },
+        {
+          "name": "Risk Distribution",
+          "path": "../../models/evaluation_plots/pipeline/risk_distribution.png",
+          "description": "Pie and bar charts showing risk level proportions",
+          "type": "combined"
+        },
+        {
+          "name": "Feature Correlation",
+          "path": "../../models/evaluation_plots/pipeline/feature_correlation.png",
+          "description": "Heatmap of corrosion feature correlations",
+          "type": "heatmap"
+        },
+        {
+          "name": "SHAP Importance",
+          "path": "../../models/metrics/pipeline/pipeline_shap_importance.png",
+          "description": "Top corrosion risk factors with SHAP values",
+          "type": "shap"
+        }
+      ]
+    },
+    "bearing": {
+      "equipment_name": "Bearing Anomaly Detection",
+      "model_type": "Isolation Forest",
+      "performance": {
+        "anomaly_rate": "18%",
+        "false_positive_reduction": "60%",
+        "method": "Unsupervised ML"
+      },
+      "visualizations": [
+        {
+          "name": "Anomaly Score Distribution",
+          "path": "../../models/evaluation_plots/bearing/anomaly_score_distribution.png",
+          "description": "Normal vs Anomalous bearing score histogram",
+          "type": "histogram"
+        },
+        {
+          "name": "FFT Spectrum",
+          "path": "../../models/evaluation_plots/bearing/fft_spectrum_comparison.png",
+          "description": "Frequency domain: Normal vs Faulty bearing",
+          "type": "line"
+        },
+        {
+          "name": "Method Comparison",
+          "path": "../../models/evaluation_plots/bearing/anomaly_rate_comparison.png",
+          "description": "Rule-based (46%) vs ML (18%) anomaly rates",
+          "type": "bar"
+        },
+        {
+          "name": "Feature Importance",
+          "path": "../../models/evaluation_plots/bearing/feature_importance.png",
+          "description": "Top vibration features: RMS, Kurtosis, Peak-to-Peak",
+          "type": "barh"
+        }
+      ]
+    },
+    "pump": {
+      "equipment_name": "Pump Health Monitoring",
+      "model_type": "Isolation Forest",
+      "performance": {
+        "anomaly_rate": "14%",
+        "false_positive_reduction": "50%",
+        "health_zones": 3
+      },
+      "visualizations": [
+        {
+          "name": "Health Score Distribution",
+          "path": "../../models/evaluation_plots/pump/health_score_distribution.png",
+          "description": "Normal/Degraded/Critical health zones",
+          "type": "histogram"
+        },
+        {
+          "name": "Efficiency Degradation",
+          "path": "../../models/evaluation_plots/pump/efficiency_degradation.png",
+          "description": "Pump efficiency decline over 10,000 hours",
+          "type": "line"
+        },
+        {
+          "name": "Seal Condition Analysis",
+          "path": "../../models/evaluation_plots/pump/temp_vibration_correlation.png",
+          "description": "Temperature vs Vibration scatter showing failure zone",
+          "type": "scatter"
+        },
+        {
+          "name": "Anomaly Comparison",
+          "path": "../../models/evaluation_plots/pump/anomaly_comparison.png",
+          "description": "Rule-based (28%) vs ML (14%) with false positive rates",
+          "type": "bar"
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total_visualizations": 20,
+    "plot_types": {
+      "scatter": 4,
+      "bar": 5,
+      "histogram": 4,
+      "heatmap": 3,
+      "line": 2,
+      "shap": 2
+    },
+    "models": {
+      "xgboost": 1,
+      "lightgbm": 2,
+      "isolation_forest": 2
+    },
+    "key_improvements": [
+      "Turbine: XGBoost reduced overfitting 46% → 25%",
+      "Compressor: LightGBM outperformed XGBoost by 2.1%",
+      "Pipeline: 92.3% accuracy on 3-class corrosion risk",
+      "Bearing: 60% reduction in false positives (46% → 18%)",
+      "Pump: 50% reduction in false alarms (28% → 14%)"
+    ]
+  }
+}

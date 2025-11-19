@@ -1,0 +1,14 @@
+{
+  "model_name": "Pump_Anomaly_Detector",
+  "algorithm": "Isolation Forest",
+  "contamination": 0.15,
+  "anomaly_rate": 0.14919827923347673,
+  "anomalies_detected": 763,
+  "total_samples": 5114,
+  "features": 21,
+  "comparison": {
+    "rule_based_rate": 0.28314430973797416,
+    "isolation_forest_rate": 0.14919827923347673,
+    "agreement": 0.795658975361752
+  }
+}
