@@ -30,9 +30,7 @@ for dir_path in output_dirs.values():
 print("📊 Generating remaining plots...")
 print("=" * 60)
 
-# =====================================================================
 # 1. TURBINE PLOTS (Simulated - actual data has column issues)
-# =====================================================================
 print("\n🔧 Generating Turbine plots...")
 
 try:
@@ -186,9 +184,7 @@ try:
 except Exception as e:
     print(f"❌ Error generating Turbine plots: {e}")
 
-# =====================================================================
 # 2. BEARING PLOTS
-# =====================================================================
 print("\n🔧 Generating Bearing plots...")
 
 try:
@@ -305,9 +301,7 @@ try:
 except Exception as e:
     print(f"❌ Error generating Bearing plots: {e}")
 
-# =====================================================================
 # 3. PUMP PLOTS
-# =====================================================================
 print("\n🔧 Generating Pump plots...")
 
 try:
@@ -446,9 +440,7 @@ try:
 except Exception as e:
     print(f"❌ Error generating Pump plots: {e}")
 
-# =====================================================================
 # SUMMARY
-# =====================================================================
 print("\n" + "=" * 60)
 print("📊 REMAINING PLOTS GENERATION COMPLETE!")
 print("=" * 60)

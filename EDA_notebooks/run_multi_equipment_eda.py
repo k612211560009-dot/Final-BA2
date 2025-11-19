@@ -18,9 +18,7 @@ sns.set_style('whitegrid')
 plt.rcParams['figure.figsize'] = (14, 6)
 pd.set_option('display.max_columns', None)
 
-print("="*80)
 print(" "*25 + "MULTI-EQUIPMENT EDA")
-print("="*80)
 
 # Load all feature datasets
 BASE_DIR = Path.cwd().parent if Path.cwd().name == 'notebooks' else Path.cwd()
@@ -86,16 +84,12 @@ equipment_summary = pd.DataFrame({
     ]
 })
 
-print("\n" + "="*80)
 print(" "*25 + "EQUIPMENT OVERVIEW")
-print("="*80)
 print(equipment_summary.to_string(index=False))
 
 # Pipeline Corrosion Analysis
 print("\n[3/8] Analyzing Pipeline Corrosion...")
-print("="*70)
 print(" "*20 + "PIPELINE CORROSION EDA")
-print("="*70)
 print(f"\nDataset: {corrosion_df.shape}")
 print(f"Equipment: {corrosion_df['equipment_id'].nunique()} pipeline segments")
 print(f"\nKey Features:")
@@ -111,9 +105,7 @@ for cond, count in condition_counts.items():
 
 # Bearing Analysis
 print("\n[4/8] Analyzing Bearings...")
-print("="*70)
 print(" "*25 + "BEARING EDA")
-print("="*70)
 print(f"\nDataset: {bearing_df.shape}")
 print(f"Equipment: {bearing_df['equipment_id'].nunique()} bearings")
 print(f"\nKey Features:")
@@ -129,9 +121,7 @@ for eq, health in equipment_health.items():
 
 # Pump Analysis
 print("\n[5/8] Analyzing Pumps...")
-print("="*70)
 print(" "*27 + "PUMP EDA")
-print("="*70)
 print(f"\nDataset: {pump_df.shape}")
 print(f"Equipment: {pump_df['equipment_id'].nunique()} pumps")
 print(f"Date range: {pump_df['timestamp'].min()} to {pump_df['timestamp'].max()}")
@@ -151,9 +141,7 @@ for pump_id in pump_df['equipment_id'].unique():
 
 # Turbine Analysis
 print("\n[6/8] Analyzing Turbines...")
-print("="*70)
 print(" "*23 + "TURBINE/ENGINE EDA")
-print("="*70)
 print(f"\nDataset: {turbine_df.shape}")
 print(f"Equipment: {turbine_df['equipment_id'].nunique()} turbofan engines")
 print(f"Cycle range: {turbine_df['time_cycles'].min()} to {turbine_df['time_cycles'].max()}")
@@ -180,9 +168,7 @@ print(f"  Max: {turbine_df['rul_actual'].max():.0f} cycles")
 
 # Compressor Analysis
 print("\n[7/8] Analyzing Compressors...")
-print("="*70)
 print(" "*23 + "COMPRESSOR EDA")
-print("="*70)
 print(f"\nDataset: {compressor_df.shape}")
 print(f"Equipment: {compressor_df['equipment_id'].nunique()} screw compressors")
 print(f"Date range: {compressor_df['timestamp'].min()} to {compressor_df['timestamp'].max()}")
@@ -211,9 +197,7 @@ for comp_id in compressor_df['equipment_id'].unique():
 
 # Cross-Equipment Comparison
 print("\n[8/8] Cross-Equipment Comparison...")
-print("="*70)
 print(" "*20 + "CROSS-EQUIPMENT ANALYSIS")
-print("="*70)
 
 # Critical equipment summary
 print("\nCritical Equipment Summary:")
@@ -224,9 +208,7 @@ print(f"  Turbine: {(turbine_df['health_index'] < 0.4).sum()} critical turbine r
 print(f"  Compressor: {(compressor_df['health_index'] < 0.4).sum()} critical compressor records")
 
 # Key Findings
-print("\n" + "="*80)
 print(" "*25 + "KEY FINDINGS")
-print("="*80)
 
 print("\n1. PIPELINE CORROSION:")
 print(f"   - {(corrosion_df['condition']=='Critical').sum()} critical segments requiring immediate attention")
@@ -259,9 +241,7 @@ print(f"   - {compressor_df['is_anomaly'].sum()} anomalies detected ({compressor
 print(f"   - Mean efficiency: {compressor_df['efficiency_normalized'].mean():.3f}")
 print(f"   - Critical records: {(compressor_df['health_index'] < 0.4).sum()}")
 
-print("\n" + "="*80)
 print(" "*25 + "RECOMMENDATIONS")
-print("="*80)
 
 print("\n1. IMMEDIATE ACTIONS:")
 print("   - Inspect critical pipeline segments with risk_score > 70")
@@ -282,18 +262,6 @@ print("   Equipment priority (by anomaly rate):")
 for idx, row in priority_order.iterrows():
     print(f"   {idx+1}. {row['Equipment Type']}: {row['Anomaly Rate (%)']:.1f}% anomaly rate")
 
-print("\n4. NEXT STEPS:")
-print("   - Run equipment-specific modeling notebooks:")
-print("     * Pipeline_Corrosion_Modeling.ipynb (LightGBM classification)")
-print("     * Turbine_RUL_Modeling.ipynb (LightGBM regression)")
-print("     * Compressor_Modeling.ipynb (TO BE CREATED - efficiency + RUL)")
-print("   - Update dashboard aggregator (COMPLETED - includes all 5 equipment types)")
-print("   - Integrate predictions into real-time dashboard")
-print("   - Set up automated alerting for critical equipment")
-
-print("\n" + "="*80)
-print("MULTI-EQUIPMENT EDA COMPLETE")
-print("="*80)
 print(f"\nTotal Equipment Monitored: {equipment_summary['Unique Equipment'].sum()}")
 print(f"Total Records Analyzed: {equipment_summary['Total Records'].sum():,}")
 print("\nAll 5 equipment types analyzed successfully!")

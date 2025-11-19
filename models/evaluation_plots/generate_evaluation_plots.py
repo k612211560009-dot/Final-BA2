@@ -37,9 +37,7 @@ for dir_path in output_dirs.values():
 print("📊 Starting plot generation...")
 print("=" * 60)
 
-# =====================================================================
 # 1. TURBINE PLOTS
-# =====================================================================
 print("\n🔧 Generating Turbine plots...")
 
 try:
@@ -212,9 +210,7 @@ try:
 except Exception as e:
     print(f"❌ Error generating Turbine plots: {e}")
 
-# =====================================================================
 # 2. COMPRESSOR PLOTS
-# =====================================================================
 print("\n🔧 Generating Compressor plots...")
 
 try:
@@ -349,9 +345,7 @@ try:
 except Exception as e:
     print(f"❌ Error generating Compressor plots: {e}")
 
-# =====================================================================
 # 3. PIPELINE PLOTS
-# =====================================================================
 print("\n🔧 Generating Pipeline plots...")
 
 try:
@@ -445,9 +439,7 @@ try:
 except Exception as e:
     print(f"❌ Error generating Pipeline plots: {e}")
 
-# =====================================================================
 # 4. BEARING PLOTS
-# =====================================================================
 print("\n🔧 Generating Bearing plots...")
 
 try:
@@ -578,9 +570,7 @@ try:
 except Exception as e:
     print(f"❌ Error generating Bearing plots: {e}")
 
-# =====================================================================
 # 5. PUMP PLOTS
-# =====================================================================
 print("\n🔧 Generating Pump plots...")
 
 try:
@@ -735,9 +725,7 @@ try:
 except Exception as e:
     print(f"❌ Error generating Pump plots: {e}")
 
-# =====================================================================
 # SUMMARY
-# =====================================================================
 print("\n" + "=" * 60)
 print("📊 PLOT GENERATION COMPLETE!")
 print("=" * 60)

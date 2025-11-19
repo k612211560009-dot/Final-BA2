@@ -34,9 +34,7 @@ METADATA_DIR = BASE_DIR / "supplement_data/metadata"
 
 FEATURES_DIR.mkdir(parents=True, exist_ok=True)
 
-print("="*70)
 print(" "*20 + "COMPRESSOR PIPELINE")
-print("="*70)
 
 # 1. LOAD RAW DATA
 
@@ -301,9 +299,7 @@ print(f"  Features: {len(feature_cols)} columns")
 
 # 10. SUMMARY STATISTICS
 
-print("\n" + "="*70)
 print(" "*20 + "PIPELINE SUMMARY")
-print("="*70)
 
 print(f"\nInput Data:")
 print(f"  Total records: {len(compressor_df):,}")
@@ -337,6 +333,4 @@ print(f"  File: {output_path}")
 print(f"  Records: {len(output_df):,}")
 print(f"  Features: {len(feature_cols)}")
 
-print("\n" + "="*70)
 print("COMPRESSOR PIPELINE COMPLETE")
-print("="*70)

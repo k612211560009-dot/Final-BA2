@@ -30,9 +30,7 @@ import shutil
 from pathlib import Path
 import json
 
-print("="*70)
 print(" "*20 + "MODEL ORGANIZATION")
-print("="*70)
 
 # Paths
 BASE_DIR = Path(__file__).resolve().parent
@@ -307,7 +305,6 @@ print(f"  models/README.md")
 
 print("\n" + "="*70)
 print(" "*20 + "ORGANIZATION COMPLETE")
-print("="*70)
 
 print(f"\n Summary:")
 print(f"  Directories created: {sum(len(subdirs) for subdirs in structure.values()) + len(structure)}")

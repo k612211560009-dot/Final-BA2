@@ -27,9 +27,7 @@ METADATA_DIR = BASE_DIR / "supplement_data/metadata"
 FEATURES_DIR = BASE_DIR / "data/features"
 FEATURES_DIR.mkdir(parents=True, exist_ok=True)
 
-print("="*70)
 print(" "*20 + "CORROSION PIPELINE")
-print("="*70)
 
 # 1. LOAD DATA
 
@@ -298,6 +296,3 @@ print(f"    Count: {len(high_risk)} ({len(high_risk)/len(corrosion_features)*100
 if len(high_risk) > 0:
     print(f"    Equipment IDs: {high_risk['equipment_id'].unique().tolist()}")
 
-print("\n" + "="*70)
-print(" CORROSION PIPELINE COMPLETE")
-print("="*70)

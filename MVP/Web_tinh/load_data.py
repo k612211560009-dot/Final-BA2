@@ -239,9 +239,7 @@ if (typeof module !== 'undefined' && module.exports) {{
 
 def main():
     """Main execution"""
-    print("="*70)
     print("Loading Equipment Data for Dashboard")
-    print("="*70)
     
     # Load data
     print("\n[1/5] Loading equipment summary...")
@@ -259,14 +257,6 @@ def main():
     
     print("[5/5] Generating JavaScript file...")
     generate_javascript_file_with_predictions(summary_data, alerts_data, predictions_data)
-    
-    print("\n" + "="*70)
-    print("Dashboard Data Generation Complete!")
-    print("="*70)
-    print("\nNext steps:")
-    print("1. Open MVP/Web_tinh/web.htm")
-    print("2. Update script.js to load from data.js")
-    print("3. Dashboard will display real equipment data with predictions")
 
 if __name__ == "__main__":
     main()
