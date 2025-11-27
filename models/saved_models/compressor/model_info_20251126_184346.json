@@ -1,10 +1,10 @@
 {
-  "timestamp": "20251119_064329",
+  "timestamp": "20251126_184346",
   "models": {
     "efficiency": {
-      "file": "lgb_compressor_efficiency_20251119_064329.txt",
-      "test_r2": null,
-      "test_rmse": null,
+      "file": "lgb_compressor_efficiency_20251126_184346.txt",
+      "test_r2": 0.9999543696062616,
+      "test_rmse": 0.0018719582203193825,
       "features": [
         "motor_speed_rpm",
         "flow_rate_m3h",
@@ -34,7 +34,7 @@
       ]
     },
     "rul": {
-      "file": "lgb_compressor_rul_20251119_064329.txt",
+      "file": "lgb_compressor_rul_20251126_184346.txt",
       "test_r2": 0.37552541431947484,
       "test_rmse": 3247.2994263247792,
       "features": [
@@ -66,9 +66,9 @@
       ]
     },
     "anomaly": {
-      "file": "lgb_compressor_anomaly_20251119_064329.txt",
-      "test_accuracy": 0.9971553517598607,
-      "test_f1": 0.9858798735511064,
+      "file": "lgb_compressor_anomaly_20251126_184346.txt",
+      "test_accuracy": null,
+      "test_f1": null,
       "features": [
         "motor_speed_rpm",
         "flow_rate_m3h",
